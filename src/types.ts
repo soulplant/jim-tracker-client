@@ -38,7 +38,7 @@ export interface EntityState {
   talk: TalkState;
 }
 
-export interface State {
+export interface TTState {
   entities: EntityState;
   view: ViewState;
 }

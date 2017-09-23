@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { State, TalkState, UserState, Talk } from './types';
+import { TTState, TalkState, UserState, Talk } from './types';
 import { INITIAL_LOAD, TTAction, INCREMENT, TOGGLE_TALK, SET_TALK_NAME } from './actions';
 
 // Split the entities with an id field into a map of the same type.
@@ -75,7 +75,7 @@ const viewReducer = combineReducers({
   counter: counterReducer,
 });
 
-export const reducer = combineReducers<State>({
+export const reducer = combineReducers<TTState>({
   entities: combineReducers({
     user: userReducer,
     talk: talkReducer,

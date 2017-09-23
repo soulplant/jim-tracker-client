@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { State, Talk, User } from '../types';
+import { TTState, Talk, User } from '../types';
 import { connect } from 'react-redux';
 import { getTalkById, getUserById } from '../selectors';
 import { toggleTalk, ToggleTalkAction, SetTalkNameAction, setTalkName } from '../actions';
@@ -15,13 +15,12 @@ interface Props {
   setTalkName: (talkId: string, talkName: string) => SetTalkNameAction;
 }
 
-// TODO(james): Rename the global State to TTState, so we can use State here.
-interface MyState {
+interface State {
   isEditing: boolean;
   currentName: string;
 }
 
-class TalkItem extends React.Component<Props & OwnProps, MyState> {
+class TalkItem extends React.Component<Props & OwnProps, State> {
   constructor(props: Props & OwnProps) {
     super(props);
     this.state = {
@@ -83,7 +82,7 @@ class TalkItem extends React.Component<Props & OwnProps, MyState> {
   }
 }
 
-export default connect((state: State, ownProps: {talkId: string}) => {
+export default connect((state: TTState, ownProps: {talkId: string}) => {
   const talk = getTalkById(state, ownProps.talkId);
   const user = getUserById(state, talk.speakerId);
   return {talk, user};
