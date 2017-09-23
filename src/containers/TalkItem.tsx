@@ -13,9 +13,12 @@ export default connect((state: State, ownProps: {talkId: string}) => {
 })(props => {
   return (
     <div>
+      <input
+        type="checkbox"
+        checked={props.talk.done}
+        onChange={() => props.toggleTalk(props.talk.id)}
+      />
       {props.talk.name} <i>by</i> {props.user.name}
-      <button onClick={() => props.toggleTalk(props.talk.id)}>Click</button>
     </div>
   );
-}
-);
+});

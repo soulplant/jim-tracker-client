@@ -19,11 +19,13 @@ store.dispatch(initialLoad({
     speakerId: '1',
     name: 'KK',
     links: [],
+    done: true,
   }, {
     id: '2',
     speakerId: '1',
     name: 'RR',
     links: [],
+    done: false,
   }],
   user: [{
     id: '1',

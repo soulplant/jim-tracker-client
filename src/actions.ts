@@ -39,6 +39,7 @@ export const increment = (): IncrementAction => ({
   type: INCREMENT,
 });
 
+// Toggles the done status of a talk.
 export const toggleTalk = (talkId: string): ToggleTalkAction => ({
   type: TOGGLE_TALK,
   talkId,

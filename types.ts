@@ -15,6 +15,7 @@ export interface Talk {
   speakerId: string;
   name: string;
   links: Link[];
+  done: boolean;
 }
 
 // Types for parts of the State.

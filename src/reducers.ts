@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { State, TalkState, UserState } from '../types';
-import { INITIAL_LOAD, TTAction, INCREMENT } from './actions';
+import { INITIAL_LOAD, TTAction, INCREMENT, TOGGLE_TALK } from './actions';
 
 // Split the entities with an id field into a map of the same type.
 function splitById<T extends {id: string}>(ts: T[]): {[id: string]: T} {
@@ -36,6 +36,18 @@ function talkReducer(talkState: TalkState = {byId: {}, order: []}, action: TTAct
         ...talkState,
         byId: splitById(action.data.talk),
         order: getIds(action.data.talk),
+      };
+    case TOGGLE_TALK:
+      const talk = talkState.byId[action.talkId];
+      return {
+        ...talkState,
+        byId: {
+          ...talkState.byId,
+          [action.talkId]: {
+            ...talk,
+            done: !talk.done,
+          },
+        },
       };
     default:
       return talkState;
