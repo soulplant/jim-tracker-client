@@ -4,6 +4,7 @@ import { User, Talk } from '../types';
 export type TTAction =
   | InitialLoadAction
   | IncrementAction
+  | ToggleTalkAction
   ;
 
 interface InitialLoadData {
@@ -13,6 +14,7 @@ interface InitialLoadData {
 
 export const INITIAL_LOAD = 'INITIAL_LOAD';
 export const INCREMENT = 'INCREMENT';
+export const TOGGLE_TALK = 'TOGGLE_TALK';
 
 export interface InitialLoadAction extends Action {
   type: 'INITIAL_LOAD';
@@ -23,15 +25,21 @@ export interface IncrementAction extends Action {
   type: 'INCREMENT';
 }
 
-export const initialLoad = (data: InitialLoadData): InitialLoadAction => {
-  return {
-    type: INITIAL_LOAD,
-    data,
-  };
-};
+export interface ToggleTalkAction extends Action {
+  type: 'TOGGLE_TALK';
+  talkId: string;
+}
 
-export const increment = (): IncrementAction => {
-  return {
-    type: INCREMENT,
-  };
-};
+export const initialLoad = (data: InitialLoadData): InitialLoadAction => ({
+  type: INITIAL_LOAD,
+  data,
+});
+
+export const increment = (): IncrementAction => ({
+  type: INCREMENT,
+});
+
+export const toggleTalk = (talkId: string): ToggleTalkAction => ({
+  type: TOGGLE_TALK,
+  talkId,
+});

@@ -17,6 +17,17 @@ export const getAllTalks = (state: State): Talk[] => {
   return talk.order.map(id => talk.byId[id]);
 };
 
+// Get a talk by its id.
+// TODO(james): Make a generic version like getById(state, "talk", talkId): Talk.
+export const getTalkById = (state: State, talkId: string): Talk => {
+  return state.entities.talk.byId[talkId];
+};
+
+// Get a user by its id.
+export const getUserById = (state: State, userId: string): User => {
+  return state.entities.user.byId[userId];
+};
+
 // Get the ids of all talks.
 export const getAllTalkIds = (state: State): string[] => {
   return state.entities.talk.order;

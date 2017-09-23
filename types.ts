@@ -32,10 +32,12 @@ export interface ViewState {
   counter: number;
 }
 
+export interface EntityState {
+  user: UserState;
+  talk: TalkState;
+}
+
 export interface State {
-  entities: {
-    user: UserState;
-    talk: TalkState;
-  };
+  entities: EntityState;
   view: ViewState;
 }
