@@ -28,12 +28,14 @@ export interface TalkState {
   order: string[];
 }
 
+export interface ViewState {
+  counter: number;
+}
+
 export interface State {
   entities: {
     user: UserState;
     talk: TalkState;
   };
-  view: {
-
-  };
+  view: ViewState;
 }

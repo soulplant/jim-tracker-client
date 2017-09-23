@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@types/react-redux": "^5.0.9",
+    "@types/redux-saga": "^0.10.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-saga": "^0.15.6"
   },
   "devDependencies": {
     "@types/jest": "^21.1.0",
