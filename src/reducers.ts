@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { State, TalkState, UserState, Talk } from '../types';
+import { State, TalkState, UserState, Talk } from './types';
 import { INITIAL_LOAD, TTAction, INCREMENT, TOGGLE_TALK, SET_TALK_NAME } from './actions';
 
 // Split the entities with an id field into a map of the same type.

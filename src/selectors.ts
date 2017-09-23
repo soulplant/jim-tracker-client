@@ -1,4 +1,4 @@
-import { State, User, Talk } from '../types';
+import { State, User, Talk } from './types';
 
 // Get all the users we know about in their natural order.
 export const getAllUsers = (state: State): User[] => {

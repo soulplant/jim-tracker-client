@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { State, Talk, User } from '../../types';
+import { State, Talk, User } from '../types';
 import { connect } from 'react-redux';
 import { getTalkById, getUserById } from '../selectors';
 import { toggleTalk, ToggleTalkAction, SetTalkNameAction, setTalkName } from '../actions';

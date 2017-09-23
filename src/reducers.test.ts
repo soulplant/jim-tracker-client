@@ -2,7 +2,7 @@ import { reducer } from "./reducers";
 import { createStore } from "redux";
 import { initialLoad, toggleTalk } from "./actions";
 import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from "./selectors";
-import { User, Talk } from "../types";
+import { User, Talk } from "./types";
 
 const james: User = {
   id: '1',

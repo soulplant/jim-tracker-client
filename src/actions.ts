@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { User, Talk } from '../types';
+import { User, Talk } from './types';
 
 export type TTAction =
   | InitialLoadAction
