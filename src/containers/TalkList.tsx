@@ -8,8 +8,8 @@ export default connect((state: TTState) => ({
   talkIds: getAllTalkIds(state)
 }))(props => {
   return (
-    <ul>
+    <div>
       {props.talkIds.map(talkId => <TalkItem key={talkId} talkId={talkId} />)}
-    </ul>
+    </div>
   );
 });

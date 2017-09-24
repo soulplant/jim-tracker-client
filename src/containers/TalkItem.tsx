@@ -30,19 +30,21 @@ class TalkItem extends React.Component<Props & OwnProps, State> {
 
   render() {
     return (
-      <div>
-        <input
-          type="checkbox"
-          checked={this.props.talk.done}
-          onChange={() => this.props.toggleTalk(this.props.talk.id)}
-        />
-        <EditableText
-          value={this.props.talk.name}
-          setValue={(value: string) =>
-            this.props.setTalkName(this.props.talkId, value)}
-        />
-        &nbsp;<i>by</i>&nbsp;
-        {this.props.user.name}
+      <div className="columns">
+        <div className="column is-half is-offset-one-quarter box">
+          <input
+            type="checkbox"
+            checked={this.props.talk.done}
+            onChange={() => this.props.toggleTalk(this.props.talk.id)}
+          />
+          <EditableText
+            value={this.props.talk.name}
+            setValue={(value: string) =>
+              this.props.setTalkName(this.props.talkId, value)}
+          />
+          &nbsp;<i>by</i>&nbsp;
+          {this.props.user.name}
+        </div>
       </div>
     );
   }
