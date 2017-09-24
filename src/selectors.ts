@@ -7,7 +7,7 @@ export const getAllUsers = (state: TTState): User[] => {
 };
 
 // Gets a map of users by id.
-export const getUsersById = (state: TTState): {[id: string]: User} => {
+export const getUsersById = (state: TTState): { [id: string]: User } => {
   return state.entities.user.byId;
 };
 

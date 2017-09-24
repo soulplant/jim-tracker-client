@@ -20,12 +20,12 @@ export interface Talk {
 
 // Types for parts of the State.
 export interface UserState {
-  byId: {[id: string]: User};
+  byId: { [id: string]: User };
   order: string[];
 }
 
 export interface TalkState {
-  byId: {[id: string]: Talk};
+  byId: { [id: string]: Talk };
   order: string[];
 }
 

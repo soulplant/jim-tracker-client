@@ -9,29 +9,39 @@ import { reducer } from './reducers';
 import TalkList from './containers/TalkList';
 import { initialLoad } from './actions';
 
-declare var window: Window & {__REDUX_DEVTOOLS_EXTENSION__?: Function};
+declare var window: Window & { __REDUX_DEVTOOLS_EXTENSION__?: Function };
 
-const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const store = createStore(
+  reducer,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
-store.dispatch(initialLoad({
-  talk: [{
-    id: '1',
-    speakerId: '1',
-    name: 'KK',
-    links: [],
-    done: true,
-  }, {
-    id: '2',
-    speakerId: '1',
-    name: 'RR',
-    links: [],
-    done: false,
-  }],
-  user: [{
-    id: '1',
-    name: 'James',
-  }],
-}));
+store.dispatch(
+  initialLoad({
+    talk: [
+      {
+        id: '1',
+        speakerId: '1',
+        name: 'KK',
+        links: [],
+        done: true
+      },
+      {
+        id: '2',
+        speakerId: '1',
+        name: 'RR',
+        links: [],
+        done: false
+      }
+    ],
+    user: [
+      {
+        id: '1',
+        name: 'James'
+      }
+    ]
+  })
+);
 
 ReactDOM.render(
   <Provider store={store}>
