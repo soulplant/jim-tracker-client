@@ -16,6 +16,7 @@
     "@types/node": "^8.0.30",
     "@types/react": "^16.0.5",
     "@types/react-dom": "^15.5.4",
+    "prettier": "^1.7.0",
     "react-scripts-ts": "2.7.0"
   },
   "scripts": {
