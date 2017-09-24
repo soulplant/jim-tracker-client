@@ -33,6 +33,11 @@ export const getAllTalkIds = (state: TTState): string[] => {
   return state.entities.talk.order;
 };
 
+// Get the ids of all users.
+export const getAllUserIds = (state: TTState): string[] => {
+  return state.entities.user.order;
+};
+
 // Get the speaker of a given talk.
 export const getSpeaker = (state: TTState, talkId: string): User => {
   const speakerId = state.entities.talk.byId[talkId].speakerId;

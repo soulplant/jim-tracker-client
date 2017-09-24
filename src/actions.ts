@@ -5,7 +5,8 @@ export type TTAction =
   | InitialLoadAction
   | IncrementAction
   | ToggleTalkAction
-  | SetTalkNameAction;
+  | SetTalkNameAction
+  | ScheduleNewTalkAction;
 
 interface InitialLoadData {
   user: User[];
@@ -16,6 +17,7 @@ export const INITIAL_LOAD = 'INITIAL_LOAD';
 export const INCREMENT = 'INCREMENT';
 export const TOGGLE_TALK = 'TOGGLE_TALK';
 export const SET_TALK_NAME = 'SET_TALK_NAME';
+export const SCHEDULE_NEW_TALK = 'SCHEDULE_NEW_TALK';
 
 export interface InitialLoadAction extends Action {
   type: 'INITIAL_LOAD';
@@ -37,6 +39,11 @@ export interface SetTalkNameAction extends Action {
   name: string;
 }
 
+export interface ScheduleNewTalkAction extends Action {
+  type: 'SCHEDULE_NEW_TALK';
+  userId: string;
+}
+
 export const initialLoad = (data: InitialLoadData): InitialLoadAction => ({
   type: INITIAL_LOAD,
   data
@@ -50,6 +57,12 @@ export const increment = (): IncrementAction => ({
 export const toggleTalk = (talkId: string): ToggleTalkAction => ({
   type: TOGGLE_TALK,
   talkId
+});
+
+// Toggles the done status of a talk.
+export const scheduleNewTalk = (userId: string): ScheduleNewTalkAction => ({
+  type: SCHEDULE_NEW_TALK,
+  userId
 });
 
 // Sets the name of a talk.

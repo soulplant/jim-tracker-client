@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { reducer } from './reducers';
 
 import TalkList from './containers/TalkList';
+import UserList from './containers/UserList';
 import { initialLoad } from './actions';
 
 declare var window: Window & { __REDUX_DEVTOOLS_EXTENSION__?: Function };
@@ -38,6 +39,10 @@ store.dispatch(
       {
         id: '1',
         name: 'James'
+      },
+      {
+        id: '2',
+        name: 'Anu'
       }
     ]
   })
@@ -46,6 +51,7 @@ store.dispatch(
 ReactDOM.render(
   <Provider store={store}>
     <div>
+      <UserList />
       <TalkList />
     </div>
   </Provider>,

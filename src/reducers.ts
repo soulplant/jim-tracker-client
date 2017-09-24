@@ -5,7 +5,8 @@ import {
   TTAction,
   INCREMENT,
   TOGGLE_TALK,
-  SET_TALK_NAME
+  SET_TALK_NAME,
+  SCHEDULE_NEW_TALK
 } from './actions';
 
 // Split the entities with an id field into a map of the same type.
@@ -49,7 +50,7 @@ function updateTalk(talkState: TalkState, talk: Talk): TalkState {
 }
 
 function talkReducer(
-  talkState: TalkState = { byId: {}, order: [] },
+  talkState: TalkState = { byId: {}, order: [], nextLocalId: -1 },
   action: TTAction
 ): TalkState {
   switch (action.type) {
@@ -68,6 +69,24 @@ function talkReducer(
       const talk = talkState.byId[action.talkId];
       const newTalk = { ...talk, name: action.name };
       return updateTalk(talkState, newTalk);
+    }
+    case SCHEDULE_NEW_TALK: {
+      const talk: Talk = {
+        id: talkState.nextLocalId + '',
+        done: false,
+        links: [],
+        name: '(untitled)',
+        speakerId: action.userId
+      };
+      return {
+        ...talkState,
+        byId: {
+          ...talkState.byId,
+          [talk.id]: talk
+        },
+        order: [...talkState.order, talk.id],
+        nextLocalId: talkState.nextLocalId - 1
+      };
     }
     default:
       return talkState;

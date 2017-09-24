@@ -27,6 +27,9 @@ export interface UserState {
 export interface TalkState {
   byId: { [id: string]: Talk };
   order: string[];
+
+  // The next local id that can be used for tasks that are not yet created on the server.
+  nextLocalId: number;
 }
 
 export interface ViewState {

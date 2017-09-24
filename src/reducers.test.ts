@@ -1,6 +1,6 @@
 import { reducer } from './reducers';
 import { createStore } from 'redux';
-import { initialLoad, toggleTalk } from './actions';
+import { initialLoad, toggleTalk, scheduleNewTalk } from './actions';
 import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from './selectors';
 import { User, Talk } from './types';
 
@@ -59,5 +59,20 @@ describe('reducers', () => {
     expect(talk1.done).toBe(true);
     store.dispatch(toggleTalk(talk1.id));
     expect(getTalkById(store.getState(), talk1.id).done).toBe(false);
+  });
+
+  it('creates new talks', () => {
+    const store = createStore(reducer);
+    store.dispatch(
+      initialLoad({
+        talk: [talk1],
+        user: [james]
+      })
+    );
+    store.dispatch(scheduleNewTalk(james.id));
+    const allTalks = getAllTalks(store.getState());
+    expect(allTalks).toHaveLength(2);
+    // Local ids start with '-'.
+    expect(allTalks[1].id).toMatch(/^-/);
   });
 });
