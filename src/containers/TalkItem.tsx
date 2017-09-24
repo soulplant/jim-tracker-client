@@ -8,6 +8,7 @@ import {
   SetTalkNameAction,
   setTalkName
 } from '../actions';
+import EditableText from '../components/EditableText';
 
 interface OwnProps {
   talkId: string;
@@ -20,48 +21,12 @@ interface Props {
   setTalkName: (talkId: string, talkName: string) => SetTalkNameAction;
 }
 
-interface State {
-  isEditing: boolean;
-  currentName: string;
-}
+interface State {}
 
 class TalkItem extends React.Component<Props & OwnProps, State> {
   constructor(props: Props & OwnProps) {
     super(props);
-    this.state = {
-      isEditing: false,
-      currentName: ''
-    };
   }
-
-  startEditing = () => {
-    this.setState({ isEditing: true, currentName: this.props.talk.name });
-  };
-
-  finishEditing = () => {
-    this.setState({ isEditing: false });
-    this.props.setTalkName(this.props.talkId, this.state.currentName);
-  };
-
-  cancelEditing = () => {
-    this.setState({ isEditing: false });
-  };
-
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ currentName: event.target.value });
-  };
-
-  handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.charCode === 13) {
-      this.finishEditing();
-    }
-  };
-
-  handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.keyCode === 27) {
-      this.cancelEditing();
-    }
-  };
 
   render() {
     return (
@@ -71,18 +36,11 @@ class TalkItem extends React.Component<Props & OwnProps, State> {
           checked={this.props.talk.done}
           onChange={() => this.props.toggleTalk(this.props.talk.id)}
         />
-        {this.state.isEditing ? (
-          <input
-            autoFocus={true}
-            type="text"
-            value={this.state.currentName}
-            onChange={this.handleChange}
-            onKeyPress={event => this.handleKeyPress(event)}
-            onKeyUp={event => this.handleKeyUp(event)}
-          />
-        ) : (
-          <span onClick={this.startEditing}>{this.props.talk.name}</span>
-        )}
+        <EditableText
+          value={this.props.talk.name}
+          setValue={(value: string) =>
+            this.props.setTalkName(this.props.talkId, value)}
+        />
         &nbsp;<i>by</i>&nbsp;
         {this.props.user.name}
       </div>
