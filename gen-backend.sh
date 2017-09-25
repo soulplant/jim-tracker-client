@@ -4,22 +4,22 @@ set -x
 
 cd "$(dirname "$0")"
 
-TMP_DIR=gen_tmp
-OUT_DIR=src/backend
+TMP_DIR="$PWD/gen_tmp"
+OUT_DIR="$PWD/src/backend"
+API_DIR="$GOPATH/src/github.com/soulplant/talk-tracker/api"
 
-rm -rf gen_tmp
-rm -rf OUT_DIR
-mkdir gen_tmp
-
-swagger-codegen generate -i $GOPATH/src/github.com/soulplant/talk-tracker/api/api.swagger.json -l typescript-fetch -o gen_tmp
-
-cp $TMP_DIR/api.ts $OUT_DIR
 rm -rf $TMP_DIR
+rm -rf $OUT_DIR
+mkdir $TMP_DIR
+mkdir $OUT_DIR
 
-sed -i '' /querystring/d $OUT_DIR/api.ts
+docker run --rm \
+  -v ${API_DIR}:/input \
+  -v ${TMP_DIR}:/output \
+  swaggerapi/swagger-codegen-cli generate \
+  -i /input/api.swagger.json \
+  -l typescript-fetch \
+  -o /output
 
-# No harm in keeping a fetch polyfill. Also, the fix is more involved than
-# these two simple lines because there are naming conflicts with the variable
-# fetch.
-# sed -i '' /^import.*isomorphicFetch/d $OUT_DIR/api.ts
-# sed -i '' s/isomorphicFetch/fetch/g $OUT_DIR/api.ts
+cp $TMP_DIR/*.ts $OUT_DIR
+rm -rf $TMP_DIR

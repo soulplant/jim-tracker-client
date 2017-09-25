@@ -20,7 +20,7 @@ const store = createStore(
 );
 
 const api = new ApiServiceApi(undefined, '/api');
-api.fetchAll().then(result => console.log(JSON.stringify(result)));
+api.fetchAll().then(result => console.log(JSON.stringify(result.talk![0].done)));
 
 store.dispatch(
   initialLoad({
