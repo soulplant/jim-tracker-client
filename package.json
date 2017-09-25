@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/core-js": "^0.9.43",
+    "@types/isomorphic-fetch": "^0.0.34",
     "@types/react-redux": "^5.0.9",
     "@types/redux-saga": "^0.10.5",
+    "core-js": "^2.5.1",
+    "isomorphic-fetch": "^2.2.1",
+    "querystring": "^0.2.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
