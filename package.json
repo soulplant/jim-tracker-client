@@ -25,5 +25,6 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "pretty": "prettier --write $(find src -iname '*.ts') $(find src -iname '*.tsx')"
-  }
+  },
+  "proxy": "http://localhost:1234"
 }
