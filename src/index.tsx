@@ -9,7 +9,7 @@ import { reducer } from './reducers';
 
 import TalkList from './containers/TalkList';
 import UserList from './containers/UserList';
-import { initialLoad } from './actions';
+import { initialLoadSuccess } from './actions';
 import { ApiServiceApi } from './backend/api';
 
 declare var window: Window & { __REDUX_DEVTOOLS_EXTENSION__?: Function };
@@ -23,7 +23,7 @@ const api = new ApiServiceApi(undefined, '/api');
 api.fetchAll().then(result => console.log(JSON.stringify(result.talk![0].done)));
 
 store.dispatch(
-  initialLoad({
+  initialLoadSuccess({
     talk: [
       {
         id: '1',

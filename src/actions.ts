@@ -2,7 +2,8 @@ import { Action } from 'redux';
 import { User, Talk } from './types';
 
 export type TTAction =
-  | InitialLoadAction
+  | InitialLoadStartAction
+  | InitialLoadSuccessAction
   | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
@@ -13,14 +14,19 @@ interface InitialLoadData {
   talk: Talk[];
 }
 
-export const INITIAL_LOAD = 'INITIAL_LOAD';
+export const INITIAL_LOAD_START = 'INITIAL_LOAD_START';
+export const INITIAL_LOAD_SUCCESS = 'INITIAL_LOAD_SUCCESS';
 export const INCREMENT = 'INCREMENT';
 export const TOGGLE_TALK = 'TOGGLE_TALK';
 export const SET_TALK_NAME = 'SET_TALK_NAME';
 export const SCHEDULE_NEW_TALK = 'SCHEDULE_NEW_TALK';
 
-export interface InitialLoadAction extends Action {
-  type: 'INITIAL_LOAD';
+export interface InitialLoadStartAction extends Action {
+  type: 'INITIAL_LOAD_START';
+}
+
+export interface InitialLoadSuccessAction extends Action {
+  type: 'INITIAL_LOAD_SUCCESS';
   data: InitialLoadData;
 }
 
@@ -44,8 +50,12 @@ export interface ScheduleNewTalkAction extends Action {
   userId: string;
 }
 
-export const initialLoad = (data: InitialLoadData): InitialLoadAction => ({
-  type: INITIAL_LOAD,
+export const initialLoadStart = (): InitialLoadStartAction => ({
+  type: INITIAL_LOAD_START,
+});
+
+export const initialLoadSuccess = (data: InitialLoadData): InitialLoadSuccessAction => ({
+  type: INITIAL_LOAD_SUCCESS,
   data
 });
 
@@ -66,10 +76,7 @@ export const scheduleNewTalk = (userId: string): ScheduleNewTalkAction => ({
 });
 
 // Sets the name of a talk.
-export const setTalkName = (
-  talkId: string,
-  name: string
-): SetTalkNameAction => ({
+export const setTalkName = (talkId: string, name: string): SetTalkNameAction => ({
   type: SET_TALK_NAME,
   talkId,
   name

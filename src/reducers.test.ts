@@ -1,6 +1,6 @@
 import { reducer } from './reducers';
 import { createStore } from 'redux';
-import { initialLoad, toggleTalk, scheduleNewTalk } from './actions';
+import { initialLoadSuccess, toggleTalk, scheduleNewTalk } from './actions';
 import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from './selectors';
 import { User, Talk } from './types';
 
@@ -21,7 +21,7 @@ describe('reducers', () => {
   it('imports users properly', () => {
     const store = createStore(reducer);
     store.dispatch(
-      initialLoad({
+      initialLoadSuccess({
         talk: [],
         user: [james]
       })
@@ -35,7 +35,7 @@ describe('reducers', () => {
   it('imports talks properly', () => {
     const store = createStore(reducer);
     store.dispatch(
-      initialLoad({
+      initialLoadSuccess({
         talk: [talk1],
         user: [james]
       })
@@ -51,7 +51,7 @@ describe('reducers', () => {
   it('toggles talks correctly', () => {
     const store = createStore(reducer);
     store.dispatch(
-      initialLoad({
+      initialLoadSuccess({
         talk: [talk1],
         user: [james]
       })
@@ -64,7 +64,7 @@ describe('reducers', () => {
   it('creates new talks', () => {
     const store = createStore(reducer);
     store.dispatch(
-      initialLoad({
+      initialLoadSuccess({
         talk: [talk1],
         user: [james]
       })
