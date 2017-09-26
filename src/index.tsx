@@ -7,8 +7,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { reducer } from './reducers';
 
-import TalkList from './containers/TalkList';
-import UserList from './containers/UserList';
+import App from './containers/App';
 import { initialLoadSuccess } from './actions';
 import { ApiServiceApi } from './backend/api';
 
@@ -55,10 +54,7 @@ store.dispatch(
 
 ReactDOM.render(
   <Provider store={store}>
-    <div>
-      <UserList />
-      <TalkList />
-    </div>
+    <App />
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
