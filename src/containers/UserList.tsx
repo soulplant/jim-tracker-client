@@ -10,7 +10,7 @@ export default connect((state: TTState) => ({
   return (
     <ul>
       {props.userIds.map(userId => (
-        <li>
+        <li key={userId}>
           <UserItem userId={userId} />
         </li>
       ))}
