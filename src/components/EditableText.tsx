@@ -14,6 +14,9 @@ interface State {
 
 // A text label that when clicked on becomes editable.
 export default class EditableText extends React.Component<OwnProps, State> {
+  // A ref to the input field so we can set the selection range on it when we start editing.
+  input: HTMLInputElement | null;
+
   constructor(props: OwnProps) {
     super(props);
     this.state = {
@@ -24,6 +27,12 @@ export default class EditableText extends React.Component<OwnProps, State> {
 
   startEditing = () => {
     this.setState({ isEditing: true, currentValue: this.props.value });
+    setTimeout(() => {
+      if (!this.input) {
+        return;
+      }
+      this.input.setSelectionRange(0, -1);
+    }, 0);
   };
 
   finishEditing = () => {
@@ -54,6 +63,7 @@ export default class EditableText extends React.Component<OwnProps, State> {
   render() {
     return this.state.isEditing ? (
       <input
+        ref={value => (this.input = value)}
         autoFocus={true}
         type="text"
         value={this.state.currentValue}
