@@ -22,6 +22,9 @@ export interface Talk {
 export interface UserState {
   byId: { [id: string]: User };
   order: string[];
+
+  // The next local id that can be used for entities that are not yet created on the server.
+  nextLocalId: number;
 }
 
 export interface TalkState {
@@ -35,6 +38,7 @@ export interface TalkState {
 export interface ViewState {
   counter: number;
   loading: boolean;
+  userText: string;
 }
 
 export interface EntityState {

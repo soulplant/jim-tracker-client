@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { TTState, TalkState, UserState, Talk } from "./types";
+import { TTState, TalkState, UserState, Talk, User } from "./types";
 import {
   INITIAL_LOAD_SUCCESS,
   TTAction,
@@ -7,7 +7,9 @@ import {
   TOGGLE_TALK,
   SET_TALK_NAME,
   SCHEDULE_NEW_TALK,
-  INITIAL_LOAD_START
+  INITIAL_LOAD_START,
+  UPDATE_USER_TEXT,
+  ADD_USER
 } from "./actions";
 
 // Split the entities with an id field into a map of the same type.
@@ -25,7 +27,7 @@ function getIds<T extends { id: string }>(ts: T[]): string[] {
 }
 
 function userReducer(
-  userState: UserState = { byId: {}, order: [] },
+  userState: UserState = { byId: {}, order: [], nextLocalId: -1 },
   action: TTAction
 ): UserState {
   switch (action.type) {
@@ -35,6 +37,21 @@ function userReducer(
         byId: splitById(action.data.user),
         order: getIds(action.data.user)
       };
+    case ADD_USER: {
+      const user: User = {
+        id: userState.nextLocalId + "",
+        name: action.userName
+      };
+      return {
+        ...userState,
+        byId: {
+          ...userState.byId,
+          [user.id]: user
+        },
+        order: [...userState.order, user.id],
+        nextLocalId: userState.nextLocalId - 1
+      };
+    }
     default:
       return userState;
   }
@@ -114,9 +131,20 @@ const loadingReducer = (state: boolean = false, action: TTAction): boolean => {
   }
 };
 
+const userText = (state: string = "", action: TTAction): string => {
+  switch (action.type) {
+    case UPDATE_USER_TEXT:
+      return action.userText;
+    case ADD_USER:
+      return "";
+  }
+  return state;
+};
+
 const viewReducer = combineReducers({
   counter: counterReducer,
-  loading: loadingReducer
+  loading: loadingReducer,
+  userText: userText
 });
 
 export const reducer = combineReducers<TTState>({

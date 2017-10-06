@@ -7,7 +7,9 @@ export type TTAction =
   | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
-  | ScheduleNewTalkAction;
+  | ScheduleNewTalkAction
+  | AddUserAction
+  | UpdateUserTextAction;
 
 export interface InitialLoadData {
   user: User[];
@@ -20,34 +22,46 @@ export const INCREMENT = "INCREMENT";
 export const TOGGLE_TALK = "TOGGLE_TALK";
 export const SET_TALK_NAME = "SET_TALK_NAME";
 export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
+export const ADD_USER = "ADD_USER";
+export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
 
 export interface InitialLoadStartAction extends Action {
   type: "INITIAL_LOAD_START";
 }
 
 export interface InitialLoadSuccessAction extends Action {
-  type: "INITIAL_LOAD_SUCCESS";
+  type: typeof INITIAL_LOAD_SUCCESS;
   data: InitialLoadData;
 }
 
 export interface IncrementAction extends Action {
-  type: "INCREMENT";
+  type: typeof INCREMENT;
 }
 
 export interface ToggleTalkAction extends Action {
-  type: "TOGGLE_TALK";
+  type: typeof TOGGLE_TALK;
   talkId: string;
 }
 
 export interface SetTalkNameAction extends Action {
-  type: "SET_TALK_NAME";
+  type: typeof SET_TALK_NAME;
   talkId: string;
   name: string;
 }
 
 export interface ScheduleNewTalkAction extends Action {
-  type: "SCHEDULE_NEW_TALK";
+  type: typeof SCHEDULE_NEW_TALK;
   userId: string;
+}
+
+export interface UpdateUserTextAction extends Action {
+  type: typeof UPDATE_USER_TEXT;
+  userText: string;
+}
+
+export interface AddUserAction extends Action {
+  type: typeof ADD_USER;
+  userName: string;
 }
 
 export const initialLoadStart = (): InitialLoadStartAction => ({
@@ -85,4 +99,16 @@ export const setTalkName = (
   type: SET_TALK_NAME,
   talkId,
   name
+});
+
+// Sets the name of a talk.
+export const updateUserText = (userText: string): UpdateUserTextAction => ({
+  type: UPDATE_USER_TEXT,
+  userText
+});
+
+// Adds a new user to the list.
+export const addUser = (userName: string): AddUserAction => ({
+  type: ADD_USER,
+  userName
 });
