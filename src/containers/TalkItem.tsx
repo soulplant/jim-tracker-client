@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { TTState, Talk, User } from '../types';
-import { connect } from 'react-redux';
-import { getTalkById, getUserById } from '../selectors';
+import * as React from "react";
+import { TTState, Talk, User } from "../types";
+import { connect } from "react-redux";
+import { getTalkById, getUserById } from "../selectors";
 import {
   toggleTalk,
   ToggleTalkAction,
   SetTalkNameAction,
   setTalkName
-} from '../actions';
-import EditableText from '../components/EditableText';
+} from "../actions";
+import EditableText from "../components/EditableText";
 
 interface OwnProps {
   talkId: string;

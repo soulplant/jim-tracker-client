@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 
 interface OwnProps {
   value: string;
@@ -16,7 +16,7 @@ export default class EditableText extends React.Component<OwnProps, State> {
     super(props);
     this.state = {
       isEditing: false,
-      currentValue: ''
+      currentValue: ""
     };
   }
 

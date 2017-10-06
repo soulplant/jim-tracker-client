@@ -1,24 +1,24 @@
-import { reducer } from './reducers';
-import { createStore } from 'redux';
-import { initialLoadSuccess, toggleTalk, scheduleNewTalk } from './actions';
-import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from './selectors';
-import { User, Talk } from './types';
+import { reducer } from "./reducers";
+import { createStore } from "redux";
+import { initialLoadSuccess, toggleTalk, scheduleNewTalk } from "./actions";
+import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from "./selectors";
+import { User, Talk } from "./types";
 
 const james: User = {
-  id: '1',
-  name: 'james'
+  id: "1",
+  name: "james"
 };
 
 const talk1: Talk = {
-  id: '1',
-  name: 'kk',
+  id: "1",
+  name: "kk",
   speakerId: james.id,
   links: [],
   done: true
 };
 
-describe('reducers', () => {
-  it('imports users properly', () => {
+describe("reducers", () => {
+  it("imports users properly", () => {
     const store = createStore(reducer);
     store.dispatch(
       initialLoadSuccess({
@@ -32,7 +32,7 @@ describe('reducers', () => {
     expect(allUsers[0].name).toBe(james.name);
   });
 
-  it('imports talks properly', () => {
+  it("imports talks properly", () => {
     const store = createStore(reducer);
     store.dispatch(
       initialLoadSuccess({
@@ -48,7 +48,7 @@ describe('reducers', () => {
     expect(getSpeaker(store.getState(), james.id).name).toBe(james.name);
   });
 
-  it('toggles talks correctly', () => {
+  it("toggles talks correctly", () => {
     const store = createStore(reducer);
     store.dispatch(
       initialLoadSuccess({
@@ -61,7 +61,7 @@ describe('reducers', () => {
     expect(getTalkById(store.getState(), talk1.id).done).toBe(false);
   });
 
-  it('creates new talks', () => {
+  it("creates new talks", () => {
     const store = createStore(reducer);
     store.dispatch(
       initialLoadSuccess({

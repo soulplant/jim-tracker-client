@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux';
-import { TTState, TalkState, UserState, Talk } from './types';
+import { combineReducers } from "redux";
+import { TTState, TalkState, UserState, Talk } from "./types";
 import {
   INITIAL_LOAD_SUCCESS,
   TTAction,
@@ -8,7 +8,7 @@ import {
   SET_TALK_NAME,
   SCHEDULE_NEW_TALK,
   INITIAL_LOAD_START
-} from './actions';
+} from "./actions";
 
 // Split the entities with an id field into a map of the same type.
 function splitById<T extends { id: string }>(ts: T[]): { [id: string]: T } {
@@ -73,10 +73,10 @@ function talkReducer(
     }
     case SCHEDULE_NEW_TALK: {
       const talk: Talk = {
-        id: talkState.nextLocalId + '',
+        id: talkState.nextLocalId + "",
         done: false,
         links: [],
-        name: '(untitled)',
+        name: "(untitled)",
         speakerId: action.userId
       };
       return {

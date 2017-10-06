@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { getUserById } from '../selectors';
-import { scheduleNewTalk } from '../actions';
-import { TTState } from '../types';
+import * as React from "react";
+import { connect } from "react-redux";
+import { getUserById } from "../selectors";
+import { scheduleNewTalk } from "../actions";
+import { TTState } from "../types";
 
 interface OwnProps {
   userId: string;

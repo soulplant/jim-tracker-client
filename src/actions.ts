@@ -1,5 +1,5 @@
-import { Action } from 'redux';
-import { User, Talk } from './types';
+import { Action } from "redux";
+import { User, Talk } from "./types";
 
 export type TTAction =
   | InitialLoadStartAction
@@ -14,47 +14,49 @@ export interface InitialLoadData {
   talk: Talk[];
 }
 
-export const INITIAL_LOAD_START = 'INITIAL_LOAD_START';
-export const INITIAL_LOAD_SUCCESS = 'INITIAL_LOAD_SUCCESS';
-export const INCREMENT = 'INCREMENT';
-export const TOGGLE_TALK = 'TOGGLE_TALK';
-export const SET_TALK_NAME = 'SET_TALK_NAME';
-export const SCHEDULE_NEW_TALK = 'SCHEDULE_NEW_TALK';
+export const INITIAL_LOAD_START = "INITIAL_LOAD_START";
+export const INITIAL_LOAD_SUCCESS = "INITIAL_LOAD_SUCCESS";
+export const INCREMENT = "INCREMENT";
+export const TOGGLE_TALK = "TOGGLE_TALK";
+export const SET_TALK_NAME = "SET_TALK_NAME";
+export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 
 export interface InitialLoadStartAction extends Action {
-  type: 'INITIAL_LOAD_START';
+  type: "INITIAL_LOAD_START";
 }
 
 export interface InitialLoadSuccessAction extends Action {
-  type: 'INITIAL_LOAD_SUCCESS';
+  type: "INITIAL_LOAD_SUCCESS";
   data: InitialLoadData;
 }
 
 export interface IncrementAction extends Action {
-  type: 'INCREMENT';
+  type: "INCREMENT";
 }
 
 export interface ToggleTalkAction extends Action {
-  type: 'TOGGLE_TALK';
+  type: "TOGGLE_TALK";
   talkId: string;
 }
 
 export interface SetTalkNameAction extends Action {
-  type: 'SET_TALK_NAME';
+  type: "SET_TALK_NAME";
   talkId: string;
   name: string;
 }
 
 export interface ScheduleNewTalkAction extends Action {
-  type: 'SCHEDULE_NEW_TALK';
+  type: "SCHEDULE_NEW_TALK";
   userId: string;
 }
 
 export const initialLoadStart = (): InitialLoadStartAction => ({
-  type: INITIAL_LOAD_START,
+  type: INITIAL_LOAD_START
 });
 
-export const initialLoadSuccess = (data: InitialLoadData): InitialLoadSuccessAction => ({
+export const initialLoadSuccess = (
+  data: InitialLoadData
+): InitialLoadSuccessAction => ({
   type: INITIAL_LOAD_SUCCESS,
   data
 });
@@ -76,7 +78,10 @@ export const scheduleNewTalk = (userId: string): ScheduleNewTalkAction => ({
 });
 
 // Sets the name of a talk.
-export const setTalkName = (talkId: string, name: string): SetTalkNameAction => ({
+export const setTalkName = (
+  talkId: string,
+  name: string
+): SetTalkNameAction => ({
   type: SET_TALK_NAME,
   talkId,
   name
