@@ -9,7 +9,7 @@ export type TTAction =
   | SetTalkNameAction
   | ScheduleNewTalkAction;
 
-interface InitialLoadData {
+export interface InitialLoadData {
   user: User[];
   talk: Talk[];
 }
