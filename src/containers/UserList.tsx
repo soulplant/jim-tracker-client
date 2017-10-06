@@ -6,14 +6,8 @@ import UserItem from "./UserItem";
 
 export default connect((state: TTState) => ({
   userIds: getAllUserIds(state),
-}))(props => {
-  return (
-    <ul>
-      {props.userIds.map(userId => (
-        <li key={userId}>
-          <UserItem userId={userId} />
-        </li>
-      ))}
-    </ul>
-  );
-});
+}))(props => (
+  <div>
+    {props.userIds.map(userId => <UserItem key={userId} userId={userId} />)}
+  </div>
+));
