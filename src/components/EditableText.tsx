@@ -16,7 +16,7 @@ export default class EditableText extends React.Component<OwnProps, State> {
     super(props);
     this.state = {
       isEditing: false,
-      currentValue: ""
+      currentValue: "",
     };
   }
 

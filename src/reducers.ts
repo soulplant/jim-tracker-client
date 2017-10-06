@@ -9,7 +9,7 @@ import {
   SCHEDULE_NEW_TALK,
   INITIAL_LOAD_START,
   UPDATE_USER_TEXT,
-  ADD_USER
+  ADD_USER,
 } from "./actions";
 
 // Split the entities with an id field into a map of the same type.
@@ -35,21 +35,21 @@ function userReducer(
       return {
         ...userState,
         byId: splitById(action.data.user),
-        order: getIds(action.data.user)
+        order: getIds(action.data.user),
       };
     case ADD_USER: {
       const user: User = {
         id: userState.nextLocalId + "",
-        name: action.userName
+        name: action.userName,
       };
       return {
         ...userState,
         byId: {
           ...userState.byId,
-          [user.id]: user
+          [user.id]: user,
         },
         order: [...userState.order, user.id],
-        nextLocalId: userState.nextLocalId - 1
+        nextLocalId: userState.nextLocalId - 1,
       };
     }
     default:
@@ -62,8 +62,8 @@ function updateTalk(talkState: TalkState, talk: Talk): TalkState {
     ...talkState,
     byId: {
       ...talkState.byId,
-      [talk.id]: talk
-    }
+      [talk.id]: talk,
+    },
   };
 }
 
@@ -76,7 +76,7 @@ function talkReducer(
       return {
         ...talkState,
         byId: splitById(action.data.talk),
-        order: getIds(action.data.talk)
+        order: getIds(action.data.talk),
       };
     case TOGGLE_TALK: {
       const talk = talkState.byId[action.talkId];
@@ -94,16 +94,16 @@ function talkReducer(
         done: false,
         links: [],
         name: "(untitled)",
-        speakerId: action.userId
+        speakerId: action.userId,
       };
       return {
         ...talkState,
         byId: {
           ...talkState.byId,
-          [talk.id]: talk
+          [talk.id]: talk,
         },
         order: [...talkState.order, talk.id],
-        nextLocalId: talkState.nextLocalId - 1
+        nextLocalId: talkState.nextLocalId - 1,
       };
     }
     default:
@@ -144,13 +144,13 @@ const userText = (state: string = "", action: TTAction): string => {
 const viewReducer = combineReducers({
   counter: counterReducer,
   loading: loadingReducer,
-  userText: userText
+  userText: userText,
 });
 
 export const reducer = combineReducers<TTState>({
   entities: combineReducers({
     user: userReducer,
-    talk: talkReducer
+    talk: talkReducer,
   }),
-  view: viewReducer
+  view: viewReducer,
 });

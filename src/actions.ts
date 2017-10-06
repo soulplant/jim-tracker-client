@@ -65,30 +65,30 @@ export interface AddUserAction extends Action {
 }
 
 export const initialLoadStart = (): InitialLoadStartAction => ({
-  type: INITIAL_LOAD_START
+  type: INITIAL_LOAD_START,
 });
 
 export const initialLoadSuccess = (
   data: InitialLoadData
 ): InitialLoadSuccessAction => ({
   type: INITIAL_LOAD_SUCCESS,
-  data
+  data,
 });
 
 export const increment = (): IncrementAction => ({
-  type: INCREMENT
+  type: INCREMENT,
 });
 
 // Toggles the done status of a talk.
 export const toggleTalk = (talkId: string): ToggleTalkAction => ({
   type: TOGGLE_TALK,
-  talkId
+  talkId,
 });
 
 // Toggles the done status of a talk.
 export const scheduleNewTalk = (userId: string): ScheduleNewTalkAction => ({
   type: SCHEDULE_NEW_TALK,
-  userId
+  userId,
 });
 
 // Sets the name of a talk.
@@ -98,17 +98,17 @@ export const setTalkName = (
 ): SetTalkNameAction => ({
   type: SET_TALK_NAME,
   talkId,
-  name
+  name,
 });
 
 // Sets the name of a talk.
 export const updateUserText = (userText: string): UpdateUserTextAction => ({
   type: UPDATE_USER_TEXT,
-  userText
+  userText,
 });
 
 // Adds a new user to the list.
 export const addUser = (userName: string): AddUserAction => ({
   type: ADD_USER,
-  userName
+  userName,
 });

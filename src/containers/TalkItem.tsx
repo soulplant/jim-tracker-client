@@ -6,7 +6,7 @@ import {
   toggleTalk,
   ToggleTalkAction,
   SetTalkNameAction,
-  setTalkName
+  setTalkName,
 } from "../actions";
 import EditableText from "../components/EditableText";
 
@@ -58,6 +58,6 @@ export default connect(
   },
   {
     toggleTalk,
-    setTalkName
+    setTalkName,
   }
 )(TalkItem);

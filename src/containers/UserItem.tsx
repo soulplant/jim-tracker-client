@@ -10,10 +10,10 @@ interface OwnProps {
 
 export default connect(
   (state: TTState, ownProps: OwnProps) => ({
-    user: getUserById(state, ownProps.userId)
+    user: getUserById(state, ownProps.userId),
   }),
   (dispatch, ownProps: OwnProps) => ({
-    scheduleNewTalk: (): {} => dispatch(scheduleNewTalk(ownProps.userId))
+    scheduleNewTalk: (): {} => dispatch(scheduleNewTalk(ownProps.userId)),
   })
 )(props => {
   return <span onClick={props.scheduleNewTalk}>{props.user.name}</span>;

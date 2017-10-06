@@ -5,7 +5,7 @@ import { getAllUserIds } from "../selectors";
 import UserItem from "./UserItem";
 
 export default connect((state: TTState) => ({
-  userIds: getAllUserIds(state)
+  userIds: getAllUserIds(state),
 }))(props => {
   return (
     <ul>

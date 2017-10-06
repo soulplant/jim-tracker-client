@@ -6,7 +6,7 @@ import { User, Talk } from "./types";
 
 const james: User = {
   id: "1",
-  name: "james"
+  name: "james",
 };
 
 const talk1: Talk = {
@@ -14,7 +14,7 @@ const talk1: Talk = {
   name: "kk",
   speakerId: james.id,
   links: [],
-  done: true
+  done: true,
 };
 
 describe("reducers", () => {
@@ -23,7 +23,7 @@ describe("reducers", () => {
     store.dispatch(
       initialLoadSuccess({
         talk: [],
-        user: [james]
+        user: [james],
       })
     );
     const allUsers = getAllUsers(store.getState());
@@ -37,7 +37,7 @@ describe("reducers", () => {
     store.dispatch(
       initialLoadSuccess({
         talk: [talk1],
-        user: [james]
+        user: [james],
       })
     );
     const allTalks = getAllTalks(store.getState());
@@ -53,7 +53,7 @@ describe("reducers", () => {
     store.dispatch(
       initialLoadSuccess({
         talk: [talk1],
-        user: [james]
+        user: [james],
       })
     );
     expect(talk1.done).toBe(true);
@@ -66,7 +66,7 @@ describe("reducers", () => {
     store.dispatch(
       initialLoadSuccess({
         talk: [talk1],
-        user: [james]
+        user: [james],
       })
     );
     store.dispatch(scheduleNewTalk(james.id));

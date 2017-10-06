@@ -11,7 +11,7 @@ import App from "./containers/App";
 import {
   initialLoadSuccess,
   initialLoadStart,
-  InitialLoadData
+  InitialLoadData,
 } from "./actions";
 import { ApiServiceApi } from "./backend/api";
 import { ApiFetchAllResponse } from "./backend/index";

@@ -6,7 +6,7 @@ import {
   addUser,
   updateUserText,
   AddUserAction,
-  UpdateUserTextAction
+  UpdateUserTextAction,
 } from "../actions";
 import { TTState } from "../types";
 
@@ -42,10 +42,10 @@ class NewUserButton extends React.Component<Props, {}> {
 
 export default connect(
   (state: TTState) => ({
-    userText: getUserText(state)
+    userText: getUserText(state),
   }),
   {
     addUser,
-    updateUserText
+    updateUserText,
   }
 )(NewUserButton);
