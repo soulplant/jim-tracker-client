@@ -8,6 +8,7 @@ export type TTAction =
   | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
+  | SetUserNameAction
   | SetNextTalkNameAction
   | ScheduleNewTalkAction
   | AddUserAction
@@ -25,6 +26,7 @@ export const INCREMENT = "INCREMENT";
 export const TOGGLE_TALK = "TOGGLE_TALK";
 export const SET_TALK_NAME = "SET_TALK_NAME";
 export const SET_NEXT_TALK_NAME = "SET_NEXT_TALK_NAME";
+export const SET_USER_NAME = "SET_USER_NAME";
 export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
 export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
@@ -54,6 +56,12 @@ export interface ToggleTalkAction extends Action {
 export interface SetTalkNameAction extends Action {
   type: typeof SET_TALK_NAME;
   talkId: string;
+  name: string;
+}
+
+export interface SetUserNameAction extends Action {
+  type: typeof SET_USER_NAME;
+  userId: string;
   name: string;
 }
 
@@ -125,6 +133,16 @@ export const setNextTalkName = (
   name: string
 ): SetNextTalkNameAction => ({
   type: SET_NEXT_TALK_NAME,
+  userId,
+  name,
+});
+
+// Sets a user's name.
+export const setUserName = (
+  userId: string,
+  name: string
+): SetUserNameAction => ({
+  type: SET_USER_NAME,
   userId,
   name,
 });

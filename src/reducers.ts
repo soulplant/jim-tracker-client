@@ -54,6 +54,19 @@ export function userReducer(
         nextLocalId: userState.nextLocalId - 1,
       };
     }
+    case SET_USER_NAME: {
+      const user = userState.byId[action.userId];
+      return {
+        ...userState,
+        byId: {
+          ...userState.byId,
+          [user.id]: {
+            ...user,
+            name: action.name,
+          },
+        },
+      };
+    }
     case SET_NEXT_TALK_NAME: {
       const user = userState.byId[action.userId];
       return {
@@ -146,6 +159,7 @@ const loadingReducer = (state: boolean = false, action: TTAction): boolean => {
   }
 };
 
+// The text in the textbox for adding a new user.
 const userText = (state: string = "", action: TTAction): string => {
   switch (action.type) {
     case UPDATE_USER_TEXT:

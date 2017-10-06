@@ -16,12 +16,17 @@ export default connect(
   {
     scheduleNewTalk,
     setNextTalkName,
+    setUserName,
   }
 )(props => {
   return (
     <div className="columns">
       <div className="column is-half is-offset-one-quarter box">
-        {props.user.name}&nbsp;&mdash;&nbsp;
+        <EditableText
+          value={props.user.name}
+          placeholder="(no name)"
+          setValue={value => props.setUserName(props.user.id, value)}
+        />&nbsp;&mdash;&nbsp;
         <EditableText
           value={props.user.nextTalk}
           placeholder="(untitled)"
