@@ -1,4 +1,4 @@
-import { TTState, User, Talk } from "./types";
+import { TTState, Talk, User } from "./types";
 
 // Get all the users we know about in their natural order.
 export const getAllUsers = (state: TTState): User[] => {

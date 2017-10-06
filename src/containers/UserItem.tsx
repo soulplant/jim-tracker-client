@@ -1,9 +1,11 @@
 import * as React from "react";
+
+import { scheduleNewTalk, setNextTalkName, setUserName } from "../actions";
+
+import EditableText from "../components/EditableText";
+import { TTState } from "../types";
 import { connect } from "react-redux";
 import { getUserById } from "../selectors";
-import { scheduleNewTalk, setNextTalkName } from "../actions";
-import { TTState } from "../types";
-import EditableText from "../components/EditableText";
 
 interface OwnProps {
   userId: string;

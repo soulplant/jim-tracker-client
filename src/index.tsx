@@ -1,20 +1,21 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import "./index.css";
 import "./bulma.css";
 
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import { reducer } from "./reducers";
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
-import App from "./containers/App";
 import {
-  initialLoadSuccess,
-  initialLoadStart,
   InitialLoadData,
+  initialLoadStart,
+  initialLoadSuccess,
 } from "./actions";
-import { ApiServiceApi } from "./backend/api";
+
 import { ApiFetchAllResponse } from "./backend/index";
+import { ApiServiceApi } from "./backend/api";
+import App from "./containers/App";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import { reducer } from "./reducers";
 
 declare var window: Window & { __REDUX_DEVTOOLS_EXTENSION__?: Function };
 

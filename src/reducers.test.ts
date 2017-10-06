@@ -1,15 +1,16 @@
-import { reducer, userReducer } from "./reducers";
-import { createStore } from "redux";
+import { Talk, User } from "./types";
 import {
-  initialLoadSuccess,
-  toggleTalk,
-  scheduleNewTalk,
   addUser,
-  setNextTalkName,
   init,
+  initialLoadSuccess,
+  scheduleNewTalk,
+  setNextTalkName,
+  toggleTalk,
 } from "./actions";
-import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from "./selectors";
-import { User, Talk } from "./types";
+import { getAllTalks, getAllUsers, getSpeaker, getTalkById } from "./selectors";
+import { reducer, userReducer } from "./reducers";
+
+import { createStore } from "redux";
 
 const james: User = {
   id: "1",

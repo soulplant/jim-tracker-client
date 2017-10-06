@@ -1,14 +1,16 @@
-import { connect } from "react-redux";
 import * as React from "react";
-import { ChangeEvent } from "react";
-import { getUserText } from "../selectors";
+
 import {
-  addUser,
-  updateUserText,
   AddUserAction,
   UpdateUserTextAction,
+  addUser,
+  updateUserText,
 } from "../actions";
+
+import { ChangeEvent } from "react";
 import { TTState } from "../types";
+import { connect } from "react-redux";
+import { getUserText } from "../selectors";
 
 interface Props {
   userText: string;

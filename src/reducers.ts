@@ -1,17 +1,19 @@
-import { combineReducers } from "redux";
-import { TTState, TalkState, UserState, Talk, User } from "./types";
 import {
-  INITIAL_LOAD_SUCCESS,
-  TTAction,
-  INCREMENT,
-  TOGGLE_TALK,
-  SET_TALK_NAME,
-  SCHEDULE_NEW_TALK,
-  INITIAL_LOAD_START,
-  UPDATE_USER_TEXT,
   ADD_USER,
+  INCREMENT,
+  INITIAL_LOAD_START,
+  INITIAL_LOAD_SUCCESS,
+  SCHEDULE_NEW_TALK,
   SET_NEXT_TALK_NAME,
+  SET_TALK_NAME,
+  SET_USER_NAME,
+  TOGGLE_TALK,
+  TTAction,
+  UPDATE_USER_TEXT,
 } from "./actions";
+import { TTState, Talk, TalkState, User, UserState } from "./types";
+
+import { combineReducers } from "redux";
 
 // Split the entities with an id field into a map of the same type.
 function splitById<T extends { id: string }>(ts: T[]): { [id: string]: T } {

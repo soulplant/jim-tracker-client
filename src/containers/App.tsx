@@ -1,6 +1,7 @@
 import * as React from "react";
-import UserList from "./UserList";
+
 import NewUserButton from "./NewUserButton";
+import UserList from "./UserList";
 
 export default (props: {}) => (
   <div>
