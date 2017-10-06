@@ -89,17 +89,8 @@ describe("user reducer", () => {
   it("allows users to set the name of talks", () => {
     let state = userReducer(undefined, init());
     state = userReducer(state, addUser("james"));
-    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
+    expect(state.byId[state.order[0]].nextTalk).toBe("");
     state = userReducer(state, setNextTalkName(state.order[0], "foo"));
     expect(state.byId[state.order[0]].nextTalk).toBe("foo");
-  });
-
-  it("defaults talk names to (untitled)", () => {
-    let state = userReducer(undefined, init());
-    state = userReducer(state, addUser("james"));
-    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
-    state = userReducer(state, setNextTalkName(state.order[0], "foo"));
-    state = userReducer(state, setNextTalkName(state.order[0], ""));
-    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
   });
 });

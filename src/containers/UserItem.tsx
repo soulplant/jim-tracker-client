@@ -24,6 +24,7 @@ export default connect(
         {props.user.name}&nbsp;&mdash;&nbsp;
         <EditableText
           value={props.user.nextTalk}
+          placeholder="(untitled)"
           setValue={(value: string) =>
             props.setNextTalkName(props.user.id, value)}
         />

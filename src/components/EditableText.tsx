@@ -2,7 +2,9 @@ import * as React from "react";
 
 interface OwnProps {
   value: string;
-  setValue: (value: string) => void;
+  // What to display when value is empty.
+  placeholder?: string;
+  setValue(value: string): void;
 }
 
 interface State {
@@ -60,7 +62,9 @@ export default class EditableText extends React.Component<OwnProps, State> {
         onKeyUp={event => this.handleKeyUp(event)}
       />
     ) : (
-      <span onClick={this.startEditing}>{this.props.value}</span>
+      <span onClick={this.startEditing}>
+        {this.props.value || this.props.placeholder}
+      </span>
     );
   }
 }

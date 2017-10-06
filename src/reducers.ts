@@ -42,7 +42,7 @@ export function userReducer(
       const user: User = {
         id: userState.nextLocalId + "",
         name: action.userName,
-        nextTalk: "(untitled)",
+        nextTalk: "",
       };
       return {
         ...userState,
@@ -62,7 +62,7 @@ export function userReducer(
           ...userState.byId,
           [user.id]: {
             ...user,
-            nextTalk: action.name || "(untitled)",
+            nextTalk: action.name,
           },
         },
       };
