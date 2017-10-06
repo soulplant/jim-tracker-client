@@ -10,6 +10,7 @@ import {
   INITIAL_LOAD_START,
   UPDATE_USER_TEXT,
   ADD_USER,
+  SET_NEXT_TALK_NAME,
 } from "./actions";
 
 // Split the entities with an id field into a map of the same type.
@@ -26,7 +27,7 @@ function getIds<T extends { id: string }>(ts: T[]): string[] {
   return ts.map(t => t.id);
 }
 
-function userReducer(
+export function userReducer(
   userState: UserState = { byId: {}, order: [], nextLocalId: -1 },
   action: TTAction
 ): UserState {
@@ -41,6 +42,7 @@ function userReducer(
       const user: User = {
         id: userState.nextLocalId + "",
         name: action.userName,
+        nextTalk: "(untitled)",
       };
       return {
         ...userState,
@@ -50,6 +52,19 @@ function userReducer(
         },
         order: [...userState.order, user.id],
         nextLocalId: userState.nextLocalId - 1,
+      };
+    }
+    case SET_NEXT_TALK_NAME: {
+      const user = userState.byId[action.userId];
+      return {
+        ...userState,
+        byId: {
+          ...userState.byId,
+          [user.id]: {
+            ...user,
+            nextTalk: action.name || "(untitled)",
+          },
+        },
       };
     }
     default:
@@ -137,8 +152,9 @@ const userText = (state: string = "", action: TTAction): string => {
       return action.userText;
     case ADD_USER:
       return "";
+    default:
+      return state;
   }
-  return state;
 };
 
 const viewReducer = combineReducers({

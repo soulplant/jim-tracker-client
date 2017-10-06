@@ -2,11 +2,13 @@ import { Action } from "redux";
 import { User, Talk } from "./types";
 
 export type TTAction =
+  | InitAction
   | InitialLoadStartAction
   | InitialLoadSuccessAction
   | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
+  | SetNextTalkNameAction
   | ScheduleNewTalkAction
   | AddUserAction
   | UpdateUserTextAction;
@@ -16,14 +18,20 @@ export interface InitialLoadData {
   talk: Talk[];
 }
 
+export const INIT = "@@INIT";
 export const INITIAL_LOAD_START = "INITIAL_LOAD_START";
 export const INITIAL_LOAD_SUCCESS = "INITIAL_LOAD_SUCCESS";
 export const INCREMENT = "INCREMENT";
 export const TOGGLE_TALK = "TOGGLE_TALK";
 export const SET_TALK_NAME = "SET_TALK_NAME";
+export const SET_NEXT_TALK_NAME = "SET_NEXT_TALK_NAME";
 export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
 export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
+
+export interface InitAction extends Action {
+  type: "@@INIT";
+}
 
 export interface InitialLoadStartAction extends Action {
   type: "INITIAL_LOAD_START";
@@ -49,6 +57,12 @@ export interface SetTalkNameAction extends Action {
   name: string;
 }
 
+export interface SetNextTalkNameAction extends Action {
+  type: typeof SET_NEXT_TALK_NAME;
+  userId: string;
+  name: string;
+}
+
 export interface ScheduleNewTalkAction extends Action {
   type: typeof SCHEDULE_NEW_TALK;
   userId: string;
@@ -63,6 +77,10 @@ export interface AddUserAction extends Action {
   type: typeof ADD_USER;
   userName: string;
 }
+
+export const init = (): InitAction => ({
+  type: INIT,
+});
 
 export const initialLoadStart = (): InitialLoadStartAction => ({
   type: INITIAL_LOAD_START,
@@ -98,6 +116,16 @@ export const setTalkName = (
 ): SetTalkNameAction => ({
   type: SET_TALK_NAME,
   talkId,
+  name,
+});
+
+// Sets the name of the next talk someone is doing.
+export const setNextTalkName = (
+  userId: string,
+  name: string
+): SetNextTalkNameAction => ({
+  type: SET_NEXT_TALK_NAME,
+  userId,
   name,
 });
 

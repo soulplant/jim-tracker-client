@@ -1,12 +1,20 @@
-import { reducer } from "./reducers";
+import { reducer, userReducer } from "./reducers";
 import { createStore } from "redux";
-import { initialLoadSuccess, toggleTalk, scheduleNewTalk } from "./actions";
+import {
+  initialLoadSuccess,
+  toggleTalk,
+  scheduleNewTalk,
+  addUser,
+  setNextTalkName,
+  init,
+} from "./actions";
 import { getAllUsers, getAllTalks, getSpeaker, getTalkById } from "./selectors";
 import { User, Talk } from "./types";
 
 const james: User = {
   id: "1",
   name: "james",
+  nextTalk: "",
 };
 
 const talk1: Talk = {
@@ -74,5 +82,24 @@ describe("reducers", () => {
     expect(allTalks).toHaveLength(2);
     // Local ids start with '-'.
     expect(allTalks[1].id).toMatch(/^-/);
+  });
+});
+
+describe("user reducer", () => {
+  it("allows users to set the name of talks", () => {
+    let state = userReducer(undefined, init());
+    state = userReducer(state, addUser("james"));
+    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
+    state = userReducer(state, setNextTalkName(state.order[0], "foo"));
+    expect(state.byId[state.order[0]].nextTalk).toBe("foo");
+  });
+
+  it("defaults talk names to (untitled)", () => {
+    let state = userReducer(undefined, init());
+    state = userReducer(state, addUser("james"));
+    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
+    state = userReducer(state, setNextTalkName(state.order[0], "foo"));
+    state = userReducer(state, setNextTalkName(state.order[0], ""));
+    expect(state.byId[state.order[0]].nextTalk).toBe("(untitled)");
   });
 });

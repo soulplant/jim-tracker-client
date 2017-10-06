@@ -3,6 +3,7 @@
 export interface User {
   id: string;
   name: string;
+  nextTalk: string;
 }
 
 export interface Link {
