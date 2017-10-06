@@ -26,7 +26,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "pretty": "prettier --write $(find src -iname '*.ts' | grep -v 'backend/') $(find src -iname '*.tsx' | grep -v 'backend/')"
+    "pretty": "prettier --config .prettierrc --write $(find src -iname '*.ts' | grep -v 'backend/') $(find src -iname '*.tsx' | grep -v 'backend/')"
   },
   "proxy": "http://localhost:1234"
 }
