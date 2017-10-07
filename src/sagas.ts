@@ -33,7 +33,7 @@ function* handleAddUser(
   api: ApiServiceApi,
   action: AddUserAction
 ): IterableIterator<any> {
-  const resp = (yield call(api.addUser.bind(api), {
+  const resp = (yield call([api, api.addUser], {
     name: action.userName,
   })) as ApiAddUserResponse;
   yield put(updateLocalId("user", action.localId, resp.user!.id!));
