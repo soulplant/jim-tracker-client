@@ -19,6 +19,7 @@ import {
   setNextTalkName,
   setUserName,
 } from "../actions";
+import { StyleSheet, css } from "aphrodite";
 import { TTState, User } from "../types";
 
 import UserItemView from "../components/UserItemView";
@@ -44,6 +45,7 @@ interface DropTargetProps {
   connectDropTarget: ConnectDropTarget;
   isOver: boolean;
   canDrop: boolean;
+  isBefore: boolean;
 }
 
 interface Props {
@@ -95,10 +97,12 @@ function dropTargetCollect(
   connector: DropTargetConnector,
   monitor: DropTargetMonitor
 ): Object {
+  const offset = monitor.getDifferenceFromInitialOffset();
   return {
     connectDropTarget: connector.dropTarget(),
     isOver: monitor.isOver(),
     canDrop: monitor.canDrop(),
+    isBefore: offset && offset.y < 0,
   };
 }
 
@@ -112,15 +116,30 @@ function dragSourceCollect(
   };
 }
 
+const styles = StyleSheet.create({
+  dragBefore: {
+    borderTop: "2px solid black",
+  },
+  dragAfter: {
+    borderBottom: "2px solid black",
+  },
+});
+
 class UserItem extends React.Component<
   Props & OwnProps & DragSourceProps & DropTargetProps,
   {}
 > {
   render() {
     const dragItem = this.props.connectDragSource(
-      <div className="column is-half is-offset-one-quarter box">
-        {this.props.isDragging && !this.props.canDrop && "o"}
-        {this.props.isOver && "*"}
+      <div
+        className={
+          "column is-half is-offset-one-quarter box " +
+          css(
+            this.props.isOver &&
+              (this.props.isBefore ? styles.dragBefore : styles.dragAfter)
+          )
+        }
+      >
         <UserItemView
           name={this.props.user.name}
           nextTalkName={this.props.user.nextTalk}
