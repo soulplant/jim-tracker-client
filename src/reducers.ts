@@ -44,7 +44,7 @@ export function userReducer(
       };
     case ADD_USER: {
       const user: User = {
-        id: userState.nextLocalId + "",
+        id: action.localId,
         name: action.userName,
         nextTalk: "",
       };
