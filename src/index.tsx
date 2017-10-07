@@ -5,6 +5,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { applyMiddleware, compose, createStore } from "redux";
+import { watchAddUser, watchInitialLoad } from "./sagas";
 
 import { ApiServiceApi } from "./backend/api";
 import App from "./containers/App";
@@ -12,7 +13,6 @@ import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { initialLoadStart } from "./actions";
 import { reducer } from "./reducers";
-import { watchInitialLoad } from "./sagas";
 
 declare var window: Window & {
   __REDUX_DEVTOOLS_EXTENSION__?: Function;
@@ -31,6 +31,7 @@ const store = createStore(
 const api = new ApiServiceApi(undefined, "/api");
 
 sagaMiddleware.run(watchInitialLoad, api);
+sagaMiddleware.run(watchAddUser, api);
 
 store.dispatch(initialLoadStart());
 

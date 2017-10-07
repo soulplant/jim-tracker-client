@@ -6,21 +6,22 @@ import {
   addUser,
   updateUserText,
 } from "../actions";
+import { getNextUserId, getUserText } from "../selectors";
 
 import { ChangeEvent } from "react";
 import { TTState } from "../types";
 import { connect } from "react-redux";
-import { getUserText } from "../selectors";
 
 interface Props {
+  nextUserId: string;
   userText: string;
-  addUser(name: string): AddUserAction;
+  addUser(localId: string, name: string): AddUserAction;
   updateUserText(userText: string): UpdateUserTextAction;
 }
 
 class NewUserButton extends React.Component<Props, {}> {
   addUser = (event: React.FormEvent<HTMLFormElement>) => {
-    this.props.addUser(this.props.userText);
+    this.props.addUser(this.props.nextUserId, this.props.userText);
     event.preventDefault();
   };
 
@@ -45,6 +46,7 @@ class NewUserButton extends React.Component<Props, {}> {
 export default connect(
   (state: TTState) => ({
     userText: getUserText(state),
+    nextUserId: getNextUserId(state),
   }),
   {
     addUser,

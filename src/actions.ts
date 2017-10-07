@@ -14,7 +14,8 @@ export type TTAction =
   | ScheduleNewTalkAction
   | AddUserAction
   | UpdateUserTextAction
-  | RepositionUserAction;
+  | RepositionUserAction
+  | UpdateLocalIdAction;
 
 export interface InitialLoadData {
   user: User[];
@@ -33,6 +34,7 @@ export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
 export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
 export const REPOSITION_USER = "REPOSITION_USER";
+export const UPDATE_LOCAL_ID = "UPDATE_LOCAL_ID";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -86,6 +88,7 @@ export interface UpdateUserTextAction extends Action {
 
 export interface AddUserAction extends Action {
   type: typeof ADD_USER;
+  localId: string;
   userName: string;
 }
 
@@ -95,6 +98,13 @@ export interface RepositionUserAction extends Action {
   anchorUserId: string;
   // Whether movedUserId should be placed before or after anchorUserId.
   before: boolean;
+}
+
+export interface UpdateLocalIdAction extends Action {
+  type: typeof UPDATE_LOCAL_ID;
+  idType: "user";
+  localId: string;
+  remoteId: string;
 }
 
 export const init = (): InitAction => ({
@@ -165,8 +175,9 @@ export const updateUserText = (userText: string): UpdateUserTextAction => ({
 });
 
 // Adds a new user to the list.
-export const addUser = (userName: string): AddUserAction => ({
+export const addUser = (localId: string, userName: string): AddUserAction => ({
   type: ADD_USER,
+  localId,
   userName,
 });
 
@@ -180,4 +191,16 @@ export const repositionUser = (
   movedUserId,
   anchorUserId,
   before,
+});
+
+// Replaces a local id with one from the server.
+export const updateLocalId = (
+  idType: "user",
+  localId: string,
+  remoteId: string
+): UpdateLocalIdAction => ({
+  type: UPDATE_LOCAL_ID,
+  idType,
+  localId,
+  remoteId,
 });

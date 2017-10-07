@@ -89,9 +89,15 @@ describe("reducers", () => {
 describe("user reducer", () => {
   it("allows users to set the name of talks", () => {
     let state = userReducer(undefined, init());
-    state = userReducer(state, addUser("james"));
+    state = userReducer(state, addUser(state.nextLocalId + "", "james"));
     expect(state.byId[state.order[0]].nextTalk).toBe("");
     state = userReducer(state, setNextTalkName(state.order[0], "foo"));
     expect(state.byId[state.order[0]].nextTalk).toBe("foo");
+  });
+
+  it("updates the next local id correctly", () => {
+    let state = userReducer(undefined, init());
+    state = userReducer(state, addUser(state.nextLocalId + "", "james"));
+    expect(state.nextLocalId).toBe(-2);
   });
 });

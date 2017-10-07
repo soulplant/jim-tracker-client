@@ -52,3 +52,8 @@ export const getCounter = (state: TTState): number => {
 export const getUserText = (state: TTState): string => {
   return state.view.userText;
 };
+
+// Gets the next available local id for users.
+export const getNextUserId = (state: TTState): string => {
+  return state.entities.user.nextLocalId + "";
+}

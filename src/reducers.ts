@@ -10,6 +10,7 @@ import {
   SET_USER_NAME,
   TOGGLE_TALK,
   TTAction,
+  UPDATE_LOCAL_ID,
   UPDATE_USER_TEXT,
 } from "./actions";
 import { TTState, Talk, TalkState, User, UserState } from "./types";
@@ -55,6 +56,26 @@ export function userReducer(
         },
         order: [...userState.order, user.id],
         nextLocalId: userState.nextLocalId - 1,
+      };
+    }
+    case UPDATE_LOCAL_ID: {
+      if (action.idType != "user") {
+        return userState;
+      }
+      const newById = { ...userState.byId };
+      const updatedUser = {
+        ...userState.byId[action.localId],
+        id: action.remoteId,
+      } as User;
+      delete newById[action.localId];
+      newById[updatedUser.id] = updatedUser;
+      const newOrder = userState.order.map(
+        id => (id == action.localId ? action.remoteId : id)
+      );
+      return {
+        ...userState,
+        byId: newById,
+        order: newOrder,
       };
     }
     case SET_USER_NAME: {
