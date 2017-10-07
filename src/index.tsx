@@ -4,39 +4,35 @@ import "./bulma.css";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import {
-  InitialLoadData,
-  initialLoadStart,
-  initialLoadSuccess,
-} from "./actions";
+import { applyMiddleware, compose, createStore } from "redux";
 
-import { ApiFetchAllResponse } from "./backend/index";
 import { ApiServiceApi } from "./backend/api";
 import App from "./containers/App";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import createSagaMiddleware from "redux-saga";
+import { initialLoadStart } from "./actions";
 import { reducer } from "./reducers";
+import { watchInitialLoad } from "./sagas";
 
-declare var window: Window & { __REDUX_DEVTOOLS_EXTENSION__?: Function };
+declare var window: Window & {
+  __REDUX_DEVTOOLS_EXTENSION__?: Function;
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+};
+const composeEnhancers: typeof compose =
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
   reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
-store.dispatch(initialLoadStart());
 const api = new ApiServiceApi(undefined, "/api");
 
-api
-  .fetchAll()
-  .then(result => store.dispatch(initialLoadSuccess(parseServerData(result))));
+sagaMiddleware.run(watchInitialLoad, api);
 
-// Parses the data the server returns into a format that the client understands.
-// Currently the types in the client are kept in sync with the protos manually.
-function parseServerData(result: ApiFetchAllResponse): InitialLoadData {
-  // TODO(james): Do something safer.
-  return result as InitialLoadData;
-}
+store.dispatch(initialLoadStart());
 
 ReactDOM.render(
   <Provider store={store}>
