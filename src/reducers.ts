@@ -3,6 +3,7 @@ import {
   INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
+  REPOSITION_USER,
   SCHEDULE_NEW_TALK,
   SET_NEXT_TALK_NAME,
   SET_TALK_NAME,
@@ -82,9 +83,37 @@ export function userReducer(
         },
       };
     }
+    case REPOSITION_USER: {
+      return {
+        ...userState,
+        order: reorder(
+          userState.order,
+          action.movedUserId,
+          action.anchorUserId,
+          action.before
+        ),
+      };
+    }
     default:
       return userState;
   }
+}
+
+// Reorders the given list of ids by moving `moved` to either before or after `anchor`.
+function reorder(
+  ids: string[],
+  moved: string,
+  anchor: string,
+  before: boolean
+): string[] {
+  const result = [...ids];
+  const movedIdx = ids.indexOf(moved);
+  const anchorIdx = ids.indexOf(anchor);
+  const insertIdx = anchorIdx + (before ? 0 : 1);
+  const deleteIdx = movedIdx + (movedIdx < insertIdx ? 0 : 1);
+  result.splice(insertIdx, 0, moved);
+  result.splice(deleteIdx, 1);
+  return result;
 }
 
 function updateTalk(talkState: TalkState, talk: Talk): TalkState {

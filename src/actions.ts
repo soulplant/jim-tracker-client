@@ -13,7 +13,8 @@ export type TTAction =
   | SetNextTalkNameAction
   | ScheduleNewTalkAction
   | AddUserAction
-  | UpdateUserTextAction;
+  | UpdateUserTextAction
+  | RepositionUserAction;
 
 export interface InitialLoadData {
   user: User[];
@@ -31,6 +32,7 @@ export const SET_USER_NAME = "SET_USER_NAME";
 export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
 export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
+export const REPOSITION_USER = "REPOSITION_USER";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -85,6 +87,14 @@ export interface UpdateUserTextAction extends Action {
 export interface AddUserAction extends Action {
   type: typeof ADD_USER;
   userName: string;
+}
+
+export interface RepositionUserAction extends Action {
+  type: typeof REPOSITION_USER;
+  movedUserId: string;
+  anchorUserId: string;
+  // Whether movedUserId should be placed before or after anchorUserId.
+  before: boolean;
 }
 
 export const init = (): InitAction => ({
@@ -158,4 +168,16 @@ export const updateUserText = (userText: string): UpdateUserTextAction => ({
 export const addUser = (userName: string): AddUserAction => ({
   type: ADD_USER,
   userName,
+});
+
+// Adds a new user to the list.
+export const repositionUser = (
+  movedUserId: string,
+  anchorUserId: string,
+  before: boolean
+): RepositionUserAction => ({
+  type: REPOSITION_USER,
+  movedUserId,
+  anchorUserId,
+  before,
 });

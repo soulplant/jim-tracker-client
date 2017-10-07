@@ -11,6 +11,7 @@ import {
   DropTargetSpec,
 } from "react-dnd";
 import {
+  RepositionUserAction,
   ScheduleNewTalkAction,
   SetNextTalkNameAction,
   SetUserNameAction,
@@ -27,6 +28,11 @@ import { getUserById } from "../selectors";
 
 interface OwnProps {
   userId: string;
+  repositionUser(
+    movedUserId: string,
+    anchorUserId: string,
+    before: boolean
+  ): RepositionUserAction;
 }
 
 interface DragSourceProps {
@@ -77,12 +83,11 @@ const dropTarget: DropTargetSpec<OwnProps> = {
     const userId = (monitor.getItem() as UserDragItem).userId;
     return userId !== props.userId;
   },
-  drop(props: OwnProps, monitor: DropTargetMonitor, component: UserItem) {
+  drop(props: OwnProps, monitor: DropTargetMonitor) {
     const dy = monitor.getDifferenceFromInitialOffset().y;
-    const direction = dy > 0 ? "above" : "below";
-    console.log("direction", direction);
-    console.log("props", JSON.stringify(props));
-    console.log("dropped!", JSON.stringify(monitor.getItem()));
+    const before = dy < 0;
+    const item = monitor.getItem() as UserDragItem;
+    props.repositionUser(item.userId, props.userId, before);
   },
 };
 
