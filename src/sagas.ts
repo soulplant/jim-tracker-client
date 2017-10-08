@@ -5,6 +5,10 @@ import {
   InitialLoadData,
   REPOSITION_USER,
   RepositionUserAction,
+  SET_NEXT_TALK_NAME,
+  SET_USER_NAME,
+  SetNextTalkNameAction,
+  SetUserNameAction,
   UPDATE_LOCAL_ID,
   initialLoadSuccess,
   resolveReposition,
@@ -45,10 +49,7 @@ export function* watchAddUser(api: ApiServiceApi) {
   yield takeEvery(ADD_USER, handleAddUser, api);
 }
 
-function* handleAddUser(
-  api: ApiServiceApi,
-  action: AddUserAction
-): IterableIterator<any> {
+function* handleAddUser(api: ApiServiceApi, action: AddUserAction) {
   const resp = (yield call([api, api.addUser], {
     name: action.userName,
   })) as ApiAddUserResponse;
@@ -61,7 +62,7 @@ export function* watchRepositions(api: ApiServiceApi) {
 
 // Will attempt to send a pending reposition request to the server. If it fails it will trigger a
 // reset.
-export function* attemptReposition(api: ApiServiceApi): IterableIterator<any> {
+export function* attemptReposition(api: ApiServiceApi): IterableIterator<{}> {
   // Check to see if there are any invalid
   const repositionBlocked: boolean = yield select(getAnyLocalIds);
   if (repositionBlocked) {
@@ -91,4 +92,30 @@ export function* attemptReposition(api: ApiServiceApi): IterableIterator<any> {
 
   // Recur so we can work our way through the list.
   yield call(attemptReposition, api);
+}
+
+export function* watchUserChanges(api: ApiServiceApi) {
+  // TODO(james): Merge these two actions.
+  yield takeEvery([SET_USER_NAME, SET_NEXT_TALK_NAME], updateUserChange, api);
+}
+
+function* updateUserChange(
+  api: ApiServiceApi,
+  action: SetUserNameAction | SetNextTalkNameAction
+) {
+  if (action.type == SET_USER_NAME) {
+    const req = {
+      name: action.name,
+    };
+    yield call([api, api.updateUser], action.userId, req);
+    return;
+  }
+  if (action.type == SET_NEXT_TALK_NAME) {
+    const req = {
+      id: action.userId,
+      nextTalkName: action.name,
+    };
+    yield call([api, api.updateUser], action.userId, req);
+    return;
+  }
 }

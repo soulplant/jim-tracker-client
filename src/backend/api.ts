@@ -272,6 +272,40 @@ export interface ApiTalk {
 /**
  * 
  * @export
+ * @interface ApiUpdateUserRequest
+ */
+export interface ApiUpdateUserRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiUpdateUserRequest
+     */
+    userId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiUpdateUserRequest
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiUpdateUserRequest
+     */
+    nextTalkName?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiUpdateUserResponse
+ */
+export interface ApiUpdateUserResponse {
+}
+
+/**
+ * 
+ * @export
  * @interface ApiUser
  */
 export interface ApiUser {
@@ -437,6 +471,42 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
                 options: requestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} userId 
+         * @param {ApiUpdateUserRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: string, body: ApiUpdateUserRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling updateUser.');
+            }
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling updateUser.');
+            }
+            const path = `/v1/user/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'PATCH' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
     }
 };
 
@@ -535,6 +605,25 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * 
+         * @param {string} userId 
+         * @param {ApiUpdateUserRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: string, body: ApiUpdateUserRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiUpdateUserResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).updateUser(userId, body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -587,6 +676,16 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
          */
         reorder(body: ApiReorderRequest, options?: any) {
             return ApiServiceApiFp(configuration).reorder(body, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {string} userId 
+         * @param {ApiUpdateUserRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateUser(userId: string, body: ApiUpdateUserRequest, options?: any) {
+            return ApiServiceApiFp(configuration).updateUser(userId, body, options)(fetch, basePath);
         },
     };
 };
@@ -650,6 +749,18 @@ export class ApiServiceApi extends BaseAPI {
      */
     public reorder(body: ApiReorderRequest, options?: any) {
         return ApiServiceApiFp(this.configuration).reorder(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {} userId 
+     * @param {} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public updateUser(userId: string, body: ApiUpdateUserRequest, options?: any) {
+        return ApiServiceApiFp(this.configuration).updateUser(userId, body, options)(this.fetch, this.basePath);
     }
 
 }
