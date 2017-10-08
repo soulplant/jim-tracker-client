@@ -4,6 +4,7 @@ import {
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
   REPOSITION_USER,
+  RESOLVE_REPOSITION,
   SCHEDULE_NEW_TALK,
   SET_NEXT_TALK_NAME,
   SET_TALK_NAME,
@@ -13,7 +14,14 @@ import {
   UPDATE_LOCAL_ID,
   UPDATE_USER_TEXT,
 } from "./actions";
-import { TTState, Talk, TalkState, User, UserState } from "./types";
+import {
+  RequestQueueState,
+  TTState,
+  Talk,
+  TalkState,
+  User,
+  UserState,
+} from "./types";
 
 import { combineReducers } from "redux";
 
@@ -222,12 +230,30 @@ const userText = (state: string = "", action: TTAction): string => {
       return state;
   }
 };
-
 const viewReducer = combineReducers({
   counter: counterReducer,
   loading: loadingReducer,
-  userText: userText,
+  userText,
 });
+
+const requestQueue = (
+  state: RequestQueueState = { pending: [] },
+  action: TTAction
+): RequestQueueState => {
+  switch (action.type) {
+    case REPOSITION_USER: {
+      return {
+        pending: [...state.pending, action],
+      };
+    }
+    case RESOLVE_REPOSITION: {
+      return {
+        pending: state.pending.slice(1),
+      };
+    }
+  }
+  return state;
+};
 
 export const reducer = combineReducers<TTState>({
   entities: combineReducers({
@@ -235,4 +261,5 @@ export const reducer = combineReducers<TTState>({
     talk: talkReducer,
   }),
   view: viewReducer,
+  requestQueue,
 });

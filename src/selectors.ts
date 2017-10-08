@@ -1,5 +1,7 @@
 import { TTState, Talk, User } from "./types";
 
+import { RepositionUserAction } from "./actions";
+
 // Get all the users we know about in their natural order.
 export const getAllUsers = (state: TTState): User[] => {
   const user = state.entities.user;
@@ -56,4 +58,20 @@ export const getUserText = (state: TTState): string => {
 // Gets the next available local id for users.
 export const getNextUserId = (state: TTState): string => {
   return state.entities.user.nextLocalId + "";
-}
+};
+
+// Whether or not there are any users with a local id, implying the server won't recognise it.
+export const getAnyLocalIds = (state: TTState): boolean => {
+  const ids = Object.keys(state.entities.user.byId);
+  return ids.findIndex(id => id.startsWith("-")) != -1;
+};
+
+// Get the next reposition request that is to be completed.
+export const getNextPendingReposition = (
+  state: TTState
+): RepositionUserAction | null => {
+  return state.requestQueue.pending[0] || null;
+};
+
+// Get the version of the ordered list of users we are operating at.
+export const getVersion = (state: TTState): string => "1";

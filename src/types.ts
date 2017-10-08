@@ -1,3 +1,5 @@
+import { RepositionUserAction } from "./actions";
+
 // Types of entities.
 
 export interface User {
@@ -47,7 +49,12 @@ export interface EntityState {
   talk: TalkState;
 }
 
+export type RequestQueueState = {
+  pending: RepositionUserAction[];
+};
+
 export interface TTState {
   entities: EntityState;
   view: ViewState;
+  requestQueue: RequestQueueState;
 }

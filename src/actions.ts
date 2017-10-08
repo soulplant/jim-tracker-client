@@ -15,6 +15,7 @@ export type TTAction =
   | AddUserAction
   | UpdateUserTextAction
   | RepositionUserAction
+  | ResolveRepositionAction
   | UpdateLocalIdAction;
 
 export interface InitialLoadData {
@@ -34,6 +35,7 @@ export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
 export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
 export const REPOSITION_USER = "REPOSITION_USER";
+export const RESOLVE_REPOSITION = "RESOLVE_REPOSITION";
 export const UPDATE_LOCAL_ID = "UPDATE_LOCAL_ID";
 
 export interface InitAction extends Action {
@@ -98,6 +100,10 @@ export interface RepositionUserAction extends Action {
   anchorUserId: string;
   // Whether movedUserId should be placed before or after anchorUserId.
   before: boolean;
+}
+
+export interface ResolveRepositionAction extends Action {
+  type: typeof RESOLVE_REPOSITION;
 }
 
 export interface UpdateLocalIdAction extends Action {
@@ -191,6 +197,11 @@ export const repositionUser = (
   movedUserId,
   anchorUserId,
   before,
+});
+
+// Indicates that the earliest pending reposition is finished.
+export const resolveReposition = (): ResolveRepositionAction => ({
+  type: RESOLVE_REPOSITION,
 });
 
 // Replaces a local id with one from the server.

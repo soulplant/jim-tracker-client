@@ -112,7 +112,7 @@ export interface ApiAddTalkResponse {
  */
 export interface ApiAddUserRequest {
     /**
-     * Name of the user to add.
+     * 
      * @type {string}
      * @memberof ApiAddUserRequest
      */
@@ -141,6 +141,12 @@ export interface ApiAddUserResponse {
 export interface ApiFetchAllResponse {
     /**
      * 
+     * @type {string}
+     * @memberof ApiFetchAllResponse
+     */
+    version?: string;
+    /**
+     * 
      * @type {Array&lt;ApiUser&gt;}
      * @memberof ApiFetchAllResponse
      */
@@ -151,6 +157,78 @@ export interface ApiFetchAllResponse {
      * @memberof ApiFetchAllResponse
      */
     talk?: Array<ApiTalk>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiGetUsersResponse
+ */
+export interface ApiGetUsersResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiGetUsersResponse
+     */
+    version?: string;
+    /**
+     * 
+     * @type {Array&lt;ApiUser&gt;}
+     * @memberof ApiGetUsersResponse
+     */
+    user?: Array<ApiUser>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiReorderRequest
+ */
+export interface ApiReorderRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiReorderRequest
+     */
+    version?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiReorderRequest
+     */
+    moveUserId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiReorderRequest
+     */
+    anchorUserId?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApiReorderRequest
+     */
+    before?: boolean;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiReorderResponse
+ */
+export interface ApiReorderResponse {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApiReorderResponse
+     */
+    accepted?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiReorderResponse
+     */
+    version?: string;
 }
 
 /**
@@ -209,6 +287,12 @@ export interface ApiUser {
      * @memberof ApiUser
      */
     name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiUser
+     */
+    nextTalk?: string;
 }
 
 
@@ -300,6 +384,59 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
                 options: requestOptions,
             };
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsers(options: any = {}): FetchArgs {
+            const path = `/v1/user`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Change the position of one user in the list of upcoming talks.
+         * @param {ApiReorderRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reorder(body: ApiReorderRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling reorder.');
+            }
+            const path = `/v1/reorder`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
     }
 };
 
@@ -362,6 +499,42 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
                 });
             };
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsers(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetUsersResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).getUsers(options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary Change the position of one user in the list of upcoming talks.
+         * @param {ApiReorderRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reorder(body: ApiReorderRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiReorderResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).reorder(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
     }
 };
 
@@ -396,6 +569,24 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
          */
         fetchAll(options?: any) {
             return ApiServiceApiFp(configuration).fetchAll(options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUsers(options?: any) {
+            return ApiServiceApiFp(configuration).getUsers(options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary Change the position of one user in the list of upcoming talks.
+         * @param {ApiReorderRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        reorder(body: ApiReorderRequest, options?: any) {
+            return ApiServiceApiFp(configuration).reorder(body, options)(fetch, basePath);
         },
     };
 };
@@ -437,6 +628,28 @@ export class ApiServiceApi extends BaseAPI {
      */
     public fetchAll(options?: any) {
         return ApiServiceApiFp(this.configuration).fetchAll(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public getUsers(options?: any) {
+        return ApiServiceApiFp(this.configuration).getUsers(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary Change the position of one user in the list of upcoming talks.
+     * @param {} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public reorder(body: ApiReorderRequest, options?: any) {
+        return ApiServiceApiFp(this.configuration).reorder(body, options)(this.fetch, this.basePath);
     }
 
 }
