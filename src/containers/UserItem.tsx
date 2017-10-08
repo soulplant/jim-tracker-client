@@ -117,11 +117,21 @@ function dragSourceCollect(
 }
 
 const styles = StyleSheet.create({
+  regular: {
+    marginTop: 2,
+    marginBottom: 2,
+  },
+  dragging: {
+    opacity: 0.5,
+    backgroundColor: "#eee",
+  },
   dragBefore: {
     borderTop: "2px solid black",
+    marginTop: 0,
   },
   dragAfter: {
     borderBottom: "2px solid black",
+    marginBottom: 0,
   },
 });
 
@@ -135,6 +145,8 @@ class UserItem extends React.Component<
         className={
           "column is-half is-offset-one-quarter box " +
           css(
+            styles.regular,
+            this.props.isDragging && styles.dragging,
             this.props.isOver &&
               (this.props.isBefore ? styles.dragBefore : styles.dragAfter)
           )
