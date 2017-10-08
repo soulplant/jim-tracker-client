@@ -41,7 +41,6 @@ export interface TalkState {
 export interface ViewState {
   counter: number;
   loading: boolean;
-  userText: string;
 }
 
 export interface EntityState {

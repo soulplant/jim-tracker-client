@@ -12,7 +12,6 @@ import {
   TOGGLE_TALK,
   TTAction,
   UPDATE_LOCAL_ID,
-  UPDATE_USER_TEXT,
 } from "./actions";
 import {
   RequestQueueState,
@@ -219,21 +218,9 @@ const loadingReducer = (state: boolean = false, action: TTAction): boolean => {
   }
 };
 
-// The text in the textbox for adding a new user.
-const userText = (state: string = "", action: TTAction): string => {
-  switch (action.type) {
-    case UPDATE_USER_TEXT:
-      return action.userText;
-    case ADD_USER:
-      return "";
-    default:
-      return state;
-  }
-};
 const viewReducer = combineReducers({
   counter: counterReducer,
   loading: loadingReducer,
-  userText,
 });
 
 const requestQueue = (

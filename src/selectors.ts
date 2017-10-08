@@ -50,11 +50,6 @@ export const getCounter = (state: TTState): number => {
   return state.view.counter;
 };
 
-// The partially entered text inside the add user <input>.
-export const getUserText = (state: TTState): string => {
-  return state.view.userText;
-};
-
 // Gets the next available local id for users.
 export const getNextUserId = (state: TTState): string => {
   return state.entities.user.nextLocalId + "";

@@ -13,7 +13,6 @@ export type TTAction =
   | SetNextTalkNameAction
   | ScheduleNewTalkAction
   | AddUserAction
-  | UpdateUserTextAction
   | RepositionUserAction
   | ResolveRepositionAction
   | UpdateLocalIdAction;
@@ -81,11 +80,6 @@ export interface SetNextTalkNameAction extends Action {
 export interface ScheduleNewTalkAction extends Action {
   type: typeof SCHEDULE_NEW_TALK;
   userId: string;
-}
-
-export interface UpdateUserTextAction extends Action {
-  type: typeof UPDATE_USER_TEXT;
-  userText: string;
 }
 
 export interface AddUserAction extends Action {
@@ -172,12 +166,6 @@ export const setUserName = (
   type: SET_USER_NAME,
   userId,
   name,
-});
-
-// Sets the name of a talk.
-export const updateUserText = (userText: string): UpdateUserTextAction => ({
-  type: UPDATE_USER_TEXT,
-  userText,
 });
 
 // Adds a new user to the list.

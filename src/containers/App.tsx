@@ -19,7 +19,15 @@ class App extends React.Component<{}, {}> {
     return (
       <div className={css(styles.container)}>
         <UserList />
-        <NewUserButton />
+        <div className="columns">
+          <div
+            className={
+              "column is-half is-offset-one-quarter " + css(styles.container)
+            }
+          >
+            <NewUserButton />
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+// import NewUserButton from "./NewUserButton";
 import { TTState } from "../types";
 import UserItem from "./UserItem";
 import { connect } from "react-redux";
@@ -22,5 +23,6 @@ export default connect(
         repositionUser={props.repositionUser}
       />
     ))}
+    {/* <NewUserButton /> */}
   </div>
 ));
