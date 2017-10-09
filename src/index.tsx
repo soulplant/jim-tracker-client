@@ -13,7 +13,7 @@ import {
 } from "./sagas";
 
 import { ApiServiceApi } from "./backend/api";
-import App from "./containers/App";
+import App2 from "./containers/App2";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { initialLoadStart } from "./actions";
@@ -44,7 +44,7 @@ store.dispatch(initialLoadStart());
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <App2 />
   </Provider>,
   document.getElementById("root") as HTMLElement
 );
