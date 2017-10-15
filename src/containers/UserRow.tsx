@@ -142,7 +142,7 @@ class UserRow extends React.Component<
     this.props.confirmationRequested(
       removeUserFromRotation(this.props.user.id),
       "",
-      "Remove " + this.props.user.name + "?"
+      "Remove " + (this.props.user.name || "(unknown)") + "?"
     );
   };
 
