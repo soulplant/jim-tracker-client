@@ -56,7 +56,10 @@ export default class EditableText extends React.Component<OwnProps, State> {
 
   handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.keyCode === 27) {
+      event.stopPropagation();
       this.cancelEditing();
+      event.preventDefault();
+      // console.log("from input", event);
     }
   };
 
@@ -69,8 +72,8 @@ export default class EditableText extends React.Component<OwnProps, State> {
         type="text"
         value={this.state.currentValue}
         onChange={this.handleChange}
-        onKeyPress={event => this.handleKeyPress(event)}
-        onKeyUp={event => this.handleKeyUp(event)}
+        onKeyPress={this.handleKeyPress}
+        onKeyUp={this.handleKeyUp}
       />
     ) : (
       <span onClick={this.startEditing}>

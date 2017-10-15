@@ -4,6 +4,7 @@ import {
   CONFIRMATION_REJECTED,
   CONFIRMATION_REQUESTED,
   END_EDIT_MODE,
+  ESCAPE_PRESSED,
   INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
@@ -254,6 +255,7 @@ const editModeReducer = (state: boolean = false, action: TTAction): boolean => {
     case START_EDIT_MODE: {
       return true;
     }
+    case ESCAPE_PRESSED:
     case END_EDIT_MODE: {
       return false;
     }

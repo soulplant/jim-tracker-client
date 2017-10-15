@@ -22,6 +22,7 @@ export type TTAction =
   | StartEditModeAction
   | EndEditModeAction
   | RemoveUserFromRotationAction
+  | EscapePressedAction
   | UpdateLocalIdAction;
 
 export interface InitialLoadData {
@@ -50,6 +51,7 @@ export const CONFIRMATION_REJECTED = "CONFIRMATION_REJECTED";
 export const START_EDIT_MODE = "START_EDIT_MODE";
 export const END_EDIT_MODE = "END_EDIT_MODE";
 export const REMOVE_USER_FROM_ROTATION = "REMOVE_USER_FROM_ROTATION";
+export const ESCAPE_PRESSED = "ESCAPE_PRESSED";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -153,6 +155,10 @@ export interface EndEditModeAction extends Action {
 export interface RemoveUserFromRotationAction extends Action {
   type: typeof REMOVE_USER_FROM_ROTATION;
   userId: string;
+}
+
+export interface EscapePressedAction extends Action {
+  type: typeof ESCAPE_PRESSED;
 }
 
 export const init = (): InitAction => ({
@@ -292,4 +298,8 @@ export const removeUserFromRotation = (
 ): RemoveUserFromRotationAction => ({
   type: REMOVE_USER_FROM_ROTATION,
   userId,
+});
+
+export const escapePressed = (): EscapePressedAction => ({
+  type: ESCAPE_PRESSED,
 });

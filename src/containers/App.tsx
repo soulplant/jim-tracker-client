@@ -1,18 +1,16 @@
 import * as React from "react";
 
+import { Dispatch, bindActionCreators } from "redux";
 import {
-  AddUserAction,
-  EndEditModeAction,
   RepositionUserAction,
-  StartEditModeAction,
   addUser,
   completeTalk,
   confirmationRequested,
   endEditMode,
+  escapePressed,
   repositionUser,
   startEditMode,
 } from "../actions";
-import { Dispatch, bindActionCreators } from "redux";
 import { TTState, User } from "../types";
 import {
   getAllUsers,
@@ -33,6 +31,16 @@ class App extends React.Component<Props & DispatchProps, {}> {
     const user = this.props.users[0];
     return this.props.completeTalk(user.id, user.name);
   };
+
+  componentDidMount() {
+    window.addEventListener(
+      "keyup",
+      event => {
+        this.props.escapePressed();
+      },
+      false
+    );
+  }
 
   render(): false | JSX.Element | null {
     return (
@@ -98,15 +106,19 @@ interface Props {
 }
 
 interface DispatchProps {
+  addUser: typeof addUser;
+  startEditMode: typeof startEditMode;
+  endEditMode: typeof endEditMode;
+  escapePressed: typeof escapePressed;
+
   repositionUser(
     movedUserId: string,
     anchorUserId: string,
     before: boolean
   ): RepositionUserAction;
-  addUser(localId: string, name: string): AddUserAction;
+  // TODO(james): Don't invent this, just use the action creator for
+  // confirmationRequested().
   completeTalk(userId: string, userName: string): void;
-  startEditMode(): StartEditModeAction;
-  endEditMode(): EndEditModeAction;
 }
 
 const mapStateToProps = (state: TTState): Props => ({
@@ -132,6 +144,7 @@ const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
       addUser,
       startEditMode,
       endEditMode,
+      escapePressed,
     },
     dispatch
   ),
