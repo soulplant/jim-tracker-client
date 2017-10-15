@@ -39,13 +39,14 @@ class ConfirmationDialog extends React.Component<Props & DispatchProps, {}> {
     return <div className="modal is-active">
       <div className="modal-background"></div>
       <div className="modal-content">
-        <div className="box">
-          <strong>Would you like to continue?</strong>
-          <br />
+        <div className="box content">
+          <h2>Please confirm</h2>
           <p>{this.props.message}</p>
           <br />
-          <div className="button is-primary" onClick={this.confirmationReceived}>Confirm</div>
-          <div className="button" onClick={this.props.confirmationRejected}>Cancel</div>
+          <div>
+            <div style={{marginRight: '1em'}} className="button is-primary" onClick={this.confirmationReceived}>Confirm</div>
+            <div className="button" onClick={this.props.confirmationRejected}>Cancel</div>
+          </div>
         </div>
       </div>
       </div>;
