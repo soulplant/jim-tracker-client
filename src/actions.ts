@@ -19,6 +19,9 @@ export type TTAction =
   | ConfirmationRequestedAction
   | ConfirmationReceivedAction
   | ConfirmationRejectedAction
+  | StartEditModeAction
+  | EndEditModeAction
+  | RemoveUserFromRotationAction
   | UpdateLocalIdAction;
 
 export interface InitialLoadData {
@@ -44,6 +47,9 @@ export const COMPLETE_TALK = "COMPLETE_TALK";
 export const CONFIRMATION_REQUESTED = "CONFIRMATION_REQUESTED";
 export const CONFIRMATION_RECEIVED = "CONFIRMATION_RECEIVED";
 export const CONFIRMATION_REJECTED = "CONFIRMATION_REJECTED";
+export const START_EDIT_MODE = "START_EDIT_MODE";
+export const END_EDIT_MODE = "END_EDIT_MODE";
+export const REMOVE_USER_FROM_ROTATION = "REMOVE_USER_FROM_ROTATION";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -132,6 +138,19 @@ export interface ConfirmationReceivedAction extends Action {
 
 export interface ConfirmationRejectedAction extends Action {
   type: typeof CONFIRMATION_REJECTED;
+}
+
+export interface StartEditModeAction extends Action {
+  type: typeof START_EDIT_MODE;
+}
+
+export interface EndEditModeAction extends Action {
+  type: typeof END_EDIT_MODE;
+}
+
+export interface RemoveUserFromRotationAction extends Action {
+  type: typeof REMOVE_USER_FROM_ROTATION;
+  userId: string;
 }
 
 export const init = (): InitAction => ({
@@ -252,4 +271,19 @@ export const confirmationReceived = (
 
 export const confirmationRejected = (): ConfirmationRejectedAction => ({
   type: CONFIRMATION_REJECTED,
+});
+
+export const startEditMode = (): StartEditModeAction => ({
+  type: START_EDIT_MODE,
+});
+
+export const endEditMode = (): EndEditModeAction => ({
+  type: END_EDIT_MODE,
+});
+
+export const removeUserFromRotation = (
+  userId: string
+): RemoveUserFromRotationAction => ({
+  type: REMOVE_USER_FROM_ROTATION,
+  userId,
 });

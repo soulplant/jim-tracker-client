@@ -3,6 +3,7 @@ import {
   CONFIRMATION_RECEIVED,
   CONFIRMATION_REJECTED,
   CONFIRMATION_REQUESTED,
+  END_EDIT_MODE,
   INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
@@ -12,6 +13,7 @@ import {
   SET_NEXT_TALK_NAME,
   SET_TALK_NAME,
   SET_USER_NAME,
+  START_EDIT_MODE,
   TOGGLE_TALK,
   TTAction,
   UPDATE_LOCAL_ID,
@@ -238,9 +240,23 @@ const confirmReducer = (
   }
 };
 
+const editModeReducer = (state: boolean = false, action: TTAction): boolean => {
+  switch (action.type) {
+    case START_EDIT_MODE: {
+      return true;
+    }
+    case END_EDIT_MODE: {
+      return false;
+    }
+    default:
+      return state;
+  }
+};
+
 const viewReducer = combineReducers({
   counter: counterReducer,
   loading: loadingReducer,
+  editMode: editModeReducer,
   confirm: confirmReducer,
 });
 

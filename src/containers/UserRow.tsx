@@ -11,24 +11,32 @@ import {
   DropTargetSpec,
 } from "react-dnd";
 import {
+  RemoveUserFromRotationAction,
   RepositionUserAction,
   SetNextTalkNameAction,
   SetUserNameAction,
+  removeUserFromRotation,
   repositionUser,
   setNextTalkName,
   setUserName,
 } from "../actions";
+import { StyleSheet, css } from "aphrodite";
 import { TTState, User } from "../types";
+import { getIsEditMode, getUserById } from "../selectors";
 
 import EditableText from "../components/EditableText";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { getUserById } from "../selectors";
 
 interface Props {
   user: User;
+  isEditMode: boolean;
+}
+
+interface DispatchProps {
   setUserName(userId: string, name: string): SetUserNameAction;
   setNextTalkName(userId: string, name: string): SetNextTalkNameAction;
+  removeUserFromRotation(userId: string): RemoveUserFromRotationAction;
 }
 
 interface OwnProps {
@@ -104,14 +112,36 @@ function dropTargetCollect(
   };
 }
 
+const styles = StyleSheet.create({
+  editMode: {
+    cursor: "grab",
+  },
+  dateColumn: {
+    width: "8em",
+  },
+});
+
 class UserRow extends React.Component<
-  Props & OwnProps & DragSourceProps & DropTargetProps,
+  Props & DispatchProps & OwnProps & DragSourceProps & DropTargetProps,
   {}
 > {
+  removeUser = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    this.props.removeUserFromRotation(this.props.user.id);
+  };
+
   render() {
     return this.props.connectDropTarget(
       this.props.connectDragSource(
-        <tr className={this.props.highlight ? "is-selected" : ""}>
+        <tr
+          className={
+            (this.props.highlight && !this.props.isEditMode
+              ? "is-selected"
+              : "") +
+            " " +
+            css(this.props.isEditMode && styles.editMode)
+          }
+        >
           <td>
             <EditableText
               value={this.props.user.name}
@@ -128,21 +158,35 @@ class UserRow extends React.Component<
                 this.props.setNextTalkName(this.props.userId, value)}
             />
           </td>
-          <td>Friday</td>
+          <td className={css(styles.dateColumn)}>
+            {this.props.isEditMode ? (
+              <a
+                href="#"
+                onClick={this.removeUser}
+                style={{ color: "#ff3860", textDecoration: "underline" }}
+              >
+                Delete
+              </a>
+            ) : (
+              "Friday"
+            )}
+          </td>
         </tr>
       )
     );
   }
 }
 
-const mapStateToProps = (state: TTState, ownProps: OwnProps) => ({
+const mapStateToProps = (state: TTState, ownProps: OwnProps): Props => ({
   user: getUserById(state, ownProps.userId),
+  isEditMode: getIsEditMode(state),
 });
 
 const mapDispatchToProps = {
   setUserName,
   setNextTalkName,
   repositionUser,
+  removeUserFromRotation,
 };
 
 const Output = compose(

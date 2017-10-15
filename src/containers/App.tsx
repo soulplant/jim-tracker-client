@@ -2,16 +2,21 @@ import * as React from "react";
 
 import {
   AddUserAction,
+  EndEditModeAction,
   RepositionUserAction,
+  StartEditModeAction,
   addUser,
   completeTalk,
   confirmationRequested,
+  endEditMode,
   repositionUser,
+  startEditMode,
 } from "../actions";
 import { Dispatch, bindActionCreators } from "redux";
 import { TTState, User } from "../types";
 import {
   getAllUsers,
+  getIsEditMode,
   getIsPendingConfirmation,
   getNextUserId,
 } from "../selectors";
@@ -22,7 +27,7 @@ import HTML5Backend from "react-dnd-html5-backend";
 import UserRow from "./UserRow";
 import { connect } from "react-redux";
 
-class App2 extends React.Component<Props & DispatchProps, {}> {
+class App extends React.Component<Props & DispatchProps, {}> {
   completeTalk = () => this.props.completeTalk(this.props.users[0].id);
 
   render(): false | JSX.Element | null {
@@ -42,6 +47,7 @@ class App2 extends React.Component<Props & DispatchProps, {}> {
             <tbody>
               {this.props.users.map((u, i) => (
                 <UserRow
+                  key={u.id}
                   userId={u.id}
                   highlight={i === 0}
                   repositionUser={this.props.repositionUser}
@@ -60,7 +66,16 @@ class App2 extends React.Component<Props & DispatchProps, {}> {
               Add speaker
             </a>
             {/* TODO(james): Clicking this should replace the date field with a delete button. */}
-            <a className="button is-link">Edit Schedule</a>
+
+            {!this.props.isEditMode ? (
+              <a className="button is-link" onClick={this.props.startEditMode}>
+                Edit Schedule
+              </a>
+            ) : (
+              <a className="button is-danger" onClick={this.props.endEditMode}>
+                Edit Schedule
+              </a>
+            )}
             <button className="button is-link" disabled={true}>
               History
             </button>
@@ -74,6 +89,7 @@ class App2 extends React.Component<Props & DispatchProps, {}> {
 interface Props {
   users: User[];
   nextUserId: string;
+  isEditMode: boolean;
   isPendingConfirmation: boolean;
 }
 
@@ -85,12 +101,15 @@ interface DispatchProps {
   ): RepositionUserAction;
   addUser(localId: string, name: string): AddUserAction;
   completeTalk(userId: string): void;
+  startEditMode(): StartEditModeAction;
+  endEditMode(): EndEditModeAction;
 }
 
 const mapStateToProps = (state: TTState): Props => ({
   users: getAllUsers(state),
   nextUserId: getNextUserId(state),
   isPendingConfirmation: getIsPendingConfirmation(state),
+  isEditMode: getIsEditMode(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
@@ -101,11 +120,13 @@ const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
     {
       repositionUser,
       addUser,
+      startEditMode,
+      endEditMode,
     },
     dispatch
   ),
 });
 
 export default DragDropContext(HTML5Backend)(
-  connect<Props, DispatchProps>(mapStateToProps, mapDispatchToProps)(App2)
+  connect<Props, DispatchProps>(mapStateToProps, mapDispatchToProps)(App)
 );

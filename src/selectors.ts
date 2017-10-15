@@ -84,3 +84,8 @@ export const getConfirmationMessage = (state: TTState): string => {
 export const getConfirmationAction = (state: TTState): TTAction => {
   return state.view.confirm!.action;
 };
+
+// Get whether edit mode is active or not.
+export const getIsEditMode = (state: TTState): boolean => {
+  return state.view.editMode;
+};
