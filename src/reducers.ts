@@ -242,6 +242,7 @@ const confirmReducer = (
     case CONFIRMATION_REQUESTED: {
       return { ...state, ...action };
     }
+    case ESCAPE_PRESSED:
     case CONFIRMATION_RECEIVED:
     case CONFIRMATION_REJECTED:
       return null;
