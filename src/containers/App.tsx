@@ -22,6 +22,7 @@ import {
 } from "../selectors";
 
 import ConfirmationDialog from "./ConfirmationDialog";
+import CustomDragLayer from "../components/CustomDragLayer";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import UserRow from "./UserRow";
@@ -33,6 +34,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
   render(): false | JSX.Element | null {
     return (
       <div className="cc">
+        <CustomDragLayer />
         {this.props.isPendingConfirmation && <ConfirmationDialog />}
         <div className="kontainer">
           <h1 className="title">Helix Talk Rotation</h1>

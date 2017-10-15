@@ -5,6 +5,7 @@ import {
   DragLayerMonitor,
   DragSource,
   DragSourceConnector,
+  DragSourceSpec,
   DropTarget,
   DropTargetConnector,
   DropTargetMonitor,
@@ -23,6 +24,7 @@ import {
 import EditableText from "../components/EditableText";
 import { compose } from "redux";
 import { connect } from "react-redux";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 interface Props {
   user: User;
@@ -42,7 +44,9 @@ interface OwnProps {
 
 interface DragSourceProps {
   connectDragSource: Function;
+  connectDragPreview: Function;
   isDragging: boolean;
+  isEditMode: boolean;
 }
 
 interface DropTargetProps {
@@ -52,18 +56,23 @@ interface DropTargetProps {
   isBefore: boolean;
 }
 
-const ItemTypes: { [id: string]: string } = {
+export const ItemTypes: { [id: string]: string } = {
   USER: "user",
 };
 
-type UserDragItem = {
+export type UserDragItem = {
   type: typeof ItemTypes.USER;
   userId: string;
 };
 
-const userSource = {
+// Note, we just clag on the isEditMode here because it is injected by the outer
+// connect below. We don't bother defining an interface just for it.
+const userSource: DragSourceSpec<OwnProps & { isEditMode: boolean }> = {
   beginDrag(props: OwnProps): UserDragItem {
     return { type: ItemTypes.USER, userId: props.userId };
+  },
+  canDrag(props: OwnProps & { isEditMode: boolean }): boolean {
+    return props.isEditMode;
   },
 };
 
@@ -73,22 +82,27 @@ function dragSourceCollect(
 ) {
   return {
     connectDragSource: connector.dragSource(),
+    connectDragPreview: connector.dragPreview(),
     isDragging: monitor.isDragging(),
   };
 }
 
-const dropTarget: DropTargetSpec<
-  OwnProps & { repositionUser: typeof repositionUser }
-> = {
-  canDrop(props, monitor: DropTargetMonitor) {
+type DropTargetOwnProps = OwnProps & { repositionUser: typeof repositionUser };
+
+const dropTarget: DropTargetSpec<DropTargetOwnProps> = {
+  canDrop(props: DropTargetOwnProps, monitor: DropTargetMonitor) {
     const userId = (monitor.getItem() as UserDragItem).userId;
     return userId !== props.userId;
   },
-  drop(props, monitor: DropTargetMonitor) {
+  drop(props: DropTargetOwnProps, monitor: DropTargetMonitor) {
     const dy = monitor.getDifferenceFromInitialOffset().y;
     const before = dy < 0;
     const item = monitor.getItem() as UserDragItem;
     props.repositionUser(item.userId, props.userId, before);
+  },
+  hover(props: DropTargetOwnProps, monitor: DropTargetMonitor) {
+    // TODO(james): Reorder the elements optimstically as they are dragged
+    // around here.
   },
 };
 
@@ -112,6 +126,10 @@ const styles = StyleSheet.create({
   dateColumn: {
     width: "8em",
   },
+  isDragging: {
+    opacity: 0,
+    height: 0,
+  },
 });
 
 class UserRow extends React.Component<
@@ -123,6 +141,12 @@ class UserRow extends React.Component<
     this.props.removeUserFromRotation(this.props.user.id);
   };
 
+  componentDidMount() {
+    this.props.connectDragPreview(getEmptyImage(), {
+      captureDraggingState: true,
+    });
+  }
+
   render() {
     return this.props.connectDropTarget(
       this.props.connectDragSource(
@@ -132,7 +156,10 @@ class UserRow extends React.Component<
               ? "is-selected"
               : "") +
             " " +
-            css(this.props.isEditMode && styles.editMode)
+            css(
+              this.props.isEditMode && styles.editMode,
+              this.props.isDragging && styles.isDragging
+            )
           }
         >
           <td>
@@ -183,12 +210,14 @@ const mapDispatchToProps = {
 };
 
 const Output = compose(
-  // We connect here to pass repositionUser to the DropTarget / DragSource HOCs,
-  // otherwise we'd have to provide it as an OwnProp to the UserRow.
-  // We specify the type parameters to connect() here so we can specify the
-  // OwnProps of the overall component. We need to do this because connect()
-  // can't infer it from its arguments, because we don't read OwnProps in them.
-  connect<{}, {}, OwnProps>(undefined, { repositionUser }),
+  // We connect here to pass props needed by the drag logic, otherwise we'd have
+  // to provide it as an OwnProp to the UserRow.
+  connect(
+    (state: TTState, ownProps: OwnProps) => ({
+      isEditMode: getIsEditMode(state),
+    }),
+    { repositionUser }
+  ),
   DropTarget(ItemTypes.USER, dropTarget, dropTargetCollect),
   DragSource(ItemTypes.USER, userSource, dragSourceCollect),
   connect(mapStateToProps, mapDispatchToProps)

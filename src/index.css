@@ -15,7 +15,7 @@ table {
 
 .kontainer {
   display: flex;
-  width: 40%;
+  width: 40em;
   margin-top: 5em;
   flex-direction: column;
   justify-content: center;
