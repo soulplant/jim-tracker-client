@@ -5,7 +5,6 @@ import {
   CONFIRMATION_REQUESTED,
   END_EDIT_MODE,
   ESCAPE_PRESSED,
-  INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
   REMOVE_USER_FROM_ROTATION,
@@ -200,15 +199,6 @@ function talkReducer(
   }
 }
 
-const counterReducer = (state: number = 0, action: TTAction): number => {
-  switch (action.type) {
-    case INCREMENT:
-      return state + 1;
-    default:
-      return state;
-  }
-};
-
 const loadingReducer = (state: boolean = false, action: TTAction): boolean => {
   switch (action.type) {
     case INITIAL_LOAD_START:
@@ -252,7 +242,6 @@ const editModeReducer = (state: boolean = false, action: TTAction): boolean => {
 };
 
 const viewReducer = combineReducers({
-  counter: counterReducer,
   loading: loadingReducer,
   editMode: editModeReducer,
   confirm: confirmReducer,

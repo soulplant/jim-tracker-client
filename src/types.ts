@@ -45,9 +45,7 @@ export interface ConfirmState {
 }
 
 export interface ViewState {
-  counter: number;
   loading: boolean;
-
   // True when the user is in edit mode.
   editMode: boolean;
   confirm: ConfirmState | null;

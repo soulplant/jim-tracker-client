@@ -45,10 +45,6 @@ export const getSpeaker = (state: TTState, talkId: string): User => {
   return state.entities.user.byId[speakerId];
 };
 
-export const getCounter = (state: TTState): number => {
-  return state.view.counter;
-};
-
 // Gets the next available local id for users.
 export const getNextUserId = (state: TTState): string => {
   return state.entities.user.nextLocalId + "";

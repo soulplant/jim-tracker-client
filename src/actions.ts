@@ -6,7 +6,6 @@ export type TTAction =
   | InitAction
   | InitialLoadStartAction
   | InitialLoadSuccessAction
-  | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
   | UpdateUserAction
@@ -32,7 +31,6 @@ export interface InitialLoadData {
 export const INIT = "@@INIT";
 export const INITIAL_LOAD_START = "INITIAL_LOAD_START";
 export const INITIAL_LOAD_SUCCESS = "INITIAL_LOAD_SUCCESS";
-export const INCREMENT = "INCREMENT";
 export const TOGGLE_TALK = "TOGGLE_TALK";
 export const SET_TALK_NAME = "SET_TALK_NAME";
 export const SET_NEXT_TALK_NAME = "SET_NEXT_TALK_NAME";
@@ -64,10 +62,6 @@ export interface InitialLoadStartAction extends Action {
 export interface InitialLoadSuccessAction extends Action {
   type: typeof INITIAL_LOAD_SUCCESS;
   data: InitialLoadData;
-}
-
-export interface IncrementAction extends Action {
-  type: typeof INCREMENT;
 }
 
 export interface ToggleTalkAction extends Action {
@@ -171,10 +165,6 @@ export const initialLoadSuccess = (
 ): InitialLoadSuccessAction => ({
   type: INITIAL_LOAD_SUCCESS,
   data,
-});
-
-export const increment = (): IncrementAction => ({
-  type: INCREMENT,
 });
 
 // Toggles the done status of a talk.
