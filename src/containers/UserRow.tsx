@@ -10,19 +10,15 @@ import {
   DropTargetMonitor,
   DropTargetSpec,
 } from "react-dnd";
+import { StyleSheet, css } from "aphrodite";
+import { TTState, User } from "../types";
+import { getIsEditMode, getUserById } from "../selectors";
 import {
-  RemoveUserFromRotationAction,
-  RepositionUserAction,
-  SetNextTalkNameAction,
-  SetUserNameAction,
   removeUserFromRotation,
   repositionUser,
   setNextTalkName,
   setUserName,
 } from "../actions";
-import { StyleSheet, css } from "aphrodite";
-import { TTState, User } from "../types";
-import { getIsEditMode, getUserById } from "../selectors";
 
 import EditableText from "../components/EditableText";
 import { compose } from "redux";
@@ -34,19 +30,14 @@ interface Props {
 }
 
 interface DispatchProps {
-  setUserName(userId: string, name: string): SetUserNameAction;
-  setNextTalkName(userId: string, name: string): SetNextTalkNameAction;
-  removeUserFromRotation(userId: string): RemoveUserFromRotationAction;
+  setUserName: typeof setUserName;
+  setNextTalkName: typeof setNextTalkName;
+  removeUserFromRotation: typeof removeUserFromRotation;
 }
 
 interface OwnProps {
   userId: string;
   highlight: boolean;
-  repositionUser(
-    movedUserId: string,
-    anchorUserId: string,
-    before: boolean
-  ): RepositionUserAction;
 }
 
 interface DragSourceProps {
@@ -86,12 +77,14 @@ function dragSourceCollect(
   };
 }
 
-const dropTarget: DropTargetSpec<OwnProps> = {
-  canDrop(props: OwnProps, monitor: DropTargetMonitor) {
+const dropTarget: DropTargetSpec<
+  OwnProps & { repositionUser: typeof repositionUser }
+> = {
+  canDrop(props, monitor: DropTargetMonitor) {
     const userId = (monitor.getItem() as UserDragItem).userId;
     return userId !== props.userId;
   },
-  drop(props: OwnProps, monitor: DropTargetMonitor) {
+  drop(props, monitor: DropTargetMonitor) {
     const dy = monitor.getDifferenceFromInitialOffset().y;
     const before = dy < 0;
     const item = monitor.getItem() as UserDragItem;
@@ -190,6 +183,12 @@ const mapDispatchToProps = {
 };
 
 const Output = compose(
+  // We connect here to pass repositionUser to the DropTarget / DragSource HOCs,
+  // otherwise we'd have to provide it as an OwnProp to the UserRow.
+  // We specify the type parameters to connect() here so we can specify the
+  // OwnProps of the overall component. We need to do this because connect()
+  // can't infer it from its arguments, because we don't read OwnProps in them.
+  connect<{}, {}, OwnProps>(undefined, { repositionUser }),
   DropTarget(ItemTypes.USER, dropTarget, dropTargetCollect),
   DragSource(ItemTypes.USER, userSource, dragSourceCollect),
   connect(mapStateToProps, mapDispatchToProps)

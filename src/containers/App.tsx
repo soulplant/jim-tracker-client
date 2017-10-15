@@ -46,12 +46,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
             </thead>
             <tbody>
               {this.props.users.map((u, i) => (
-                <UserRow
-                  key={u.id}
-                  userId={u.id}
-                  highlight={i === 0}
-                  repositionUser={this.props.repositionUser}
-                />
+                <UserRow key={u.id} userId={u.id} highlight={i === 0} />
               ))}
             </tbody>
           </table>
