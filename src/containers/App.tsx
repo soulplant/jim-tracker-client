@@ -1,37 +1,25 @@
 import * as React from "react";
 
-import { Dispatch, bindActionCreators } from "redux";
-import {
-  RepositionUserAction,
-  addUser,
-  completeTalk,
-  confirmationRequested,
-  endEditMode,
-  escapePressed,
-  repositionUser,
-  startEditMode,
-} from "../actions";
-import { TTState, User } from "../types";
-import {
-  getAllUsers,
-  getIsEditMode,
-  getIsPendingConfirmation,
-  getNextUserId,
-} from "../selectors";
-
+import ButtonPanel from "./ButtonPanel";
 import ConfirmationDialog from "./ConfirmationDialog";
 import CustomDragLayer from "../components/CustomDragLayer";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
-import UserRow from "./UserRow";
+import { TTState } from "../types";
+import TalkScheduleTable from "./TalkScheduleTable";
 import { connect } from "react-redux";
+import { escapePressed } from "../actions";
+import { getIsPendingConfirmation } from "../selectors";
+
+interface Props {
+  isPendingConfirmation: boolean;
+}
+
+interface DispatchProps {
+  escapePressed: typeof escapePressed;
+}
 
 class App extends React.Component<Props & DispatchProps, {}> {
-  completeTalk = () => {
-    const user = this.props.users[0];
-    return this.props.completeTalk(user.id, user.name);
-  };
-
   componentDidMount() {
     window.addEventListener(
       "keyup",
@@ -49,115 +37,22 @@ class App extends React.Component<Props & DispatchProps, {}> {
         {this.props.isPendingConfirmation && <ConfirmationDialog />}
         <div className="kontainer">
           <h1 className="title">Helix Talk Rotation</h1>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Speaker</th>
-                <th>Talk</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.users.map((u, i) => (
-                <UserRow key={u.id} userId={u.id} highlight={i === 0} />
-              ))}
-            </tbody>
-          </table>
-          <div className="button-kontainer">
-            <button
-              className="button is-primary"
-              disabled={this.props.isEditMode || this.props.users.length === 0}
-              onClick={this.completeTalk}
-            >
-              Talk Complete
-            </button>
-            <a
-              className="button is-link"
-              onClick={() => this.props.addUser(this.props.nextUserId, "")}
-            >
-              Add Speaker
-            </a>
-            {/* TODO(james): Clicking this should replace the date field with a delete button. */}
-
-            {!this.props.isEditMode ? (
-              <a className="button is-link" onClick={this.props.startEditMode}>
-                Edit Schedule
-              </a>
-            ) : (
-              <a className="button is-danger" onClick={this.props.endEditMode}>
-                Edit Schedule
-              </a>
-            )}
-            <button className="button is-link" disabled={true}>
-              History
-            </button>
-          </div>
+          <TalkScheduleTable />
+          <ButtonPanel />
         </div>
       </div>
     );
   }
 }
 
-interface Props {
-  users: User[];
-  nextUserId: string;
-  isEditMode: boolean;
-  isPendingConfirmation: boolean;
-}
-
-interface DispatchProps {
-  addUser: typeof addUser;
-  startEditMode: typeof startEditMode;
-  endEditMode: typeof endEditMode;
-  escapePressed: typeof escapePressed;
-
-  repositionUser(
-    movedUserId: string,
-    anchorUserId: string,
-    before: boolean
-  ): RepositionUserAction;
-  // TODO(james): Don't invent this, just use the action creator for
-  // confirmationRequested().
-  completeTalk(userId: string, userName: string): void;
-}
-
 const mapStateToProps = (state: TTState): Props => ({
-  users: getAllUsers(state),
-  nextUserId: getNextUserId(state),
   isPendingConfirmation: getIsPendingConfirmation(state),
-  isEditMode: getIsEditMode(state),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
-  completeTalk(userId: string, userName: string) {
-    dispatch(
-      confirmationRequested(
-        completeTalk(userId),
-        "Please Confirm",
-        "Mark " + addApostropheS(userName) + " talk as done?"
-      )
-    );
-  },
-  ...bindActionCreators(
-    {
-      repositionUser,
-      addUser,
-      startEditMode,
-      endEditMode,
-      escapePressed,
-    },
-    dispatch
-  ),
-});
+const mapDispatchToProps: DispatchProps = {
+  escapePressed,
+};
 
 export default DragDropContext(HTML5Backend)(
   connect<Props, DispatchProps>(mapStateToProps, mapDispatchToProps)(App)
 );
-
-// Adds an "'s" to names, handling the 's' suffix anomaly.
-const addApostropheS = (name: string): string => {
-  if (name[name.length - 1] === "s") {
-    return name + "'";
-  }
-  return name + "'s";
-};
