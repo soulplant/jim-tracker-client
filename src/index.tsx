@@ -7,6 +7,7 @@ import * as ReactDOM from "react-dom";
 import { applyMiddleware, compose, createStore } from "redux";
 import {
   watchAddUser,
+  watchConfirmedActions,
   watchInitialLoad,
   watchRepositions,
   watchUserChanges,
@@ -39,6 +40,7 @@ sagaMiddleware.run(watchInitialLoad, api);
 sagaMiddleware.run(watchAddUser, api);
 sagaMiddleware.run(watchUserChanges, api);
 sagaMiddleware.run(watchRepositions, api);
+sagaMiddleware.run(watchConfirmedActions);
 
 store.dispatch(initialLoadStart());
 

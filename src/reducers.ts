@@ -1,5 +1,8 @@
 import {
   ADD_USER,
+  CONFIRMATION_RECEIVED,
+  CONFIRMATION_REJECTED,
+  CONFIRMATION_REQUESTED,
   INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
@@ -14,6 +17,7 @@ import {
   UPDATE_LOCAL_ID,
 } from "./actions";
 import {
+  ConfirmState,
   RequestQueueState,
   TTState,
   Talk,
@@ -218,9 +222,26 @@ const loadingReducer = (state: boolean = false, action: TTAction): boolean => {
   }
 };
 
+const confirmReducer = (
+  state: ConfirmState | null = null,
+  action: TTAction
+): ConfirmState | null => {
+  switch (action.type) {
+    case CONFIRMATION_REQUESTED: {
+      return { ...state, action: action.action };
+    }
+    case CONFIRMATION_RECEIVED:
+    case CONFIRMATION_REJECTED:
+      return null;
+    default:
+      return state;
+  }
+};
+
 const viewReducer = combineReducers({
   counter: counterReducer,
   loading: loadingReducer,
+  confirm: confirmReducer,
 });
 
 const requestQueue = (

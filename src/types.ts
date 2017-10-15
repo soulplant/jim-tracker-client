@@ -1,4 +1,4 @@
-import { RepositionUserAction } from "./actions";
+import { RepositionUserAction, TTAction } from "./actions";
 
 // Types of entities.
 
@@ -38,9 +38,15 @@ export interface TalkState {
   nextLocalId: number;
 }
 
+export interface ConfirmState {
+  action: TTAction;
+  // TODO(james): Allow callers to specify a message that goes in the popup.
+}
+
 export interface ViewState {
   counter: number;
   loading: boolean;
+  confirm: ConfirmState | null;
 }
 
 export interface EntityState {

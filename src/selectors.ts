@@ -1,6 +1,5 @@
+import { RepositionUserAction, TTAction } from "./actions";
 import { TTState, Talk, User } from "./types";
-
-import { RepositionUserAction } from "./actions";
 
 // Get all the users we know about in their natural order.
 export const getAllUsers = (state: TTState): User[] => {
@@ -70,3 +69,18 @@ export const getNextPendingReposition = (
 
 // Get the version of the ordered list of users we are operating at.
 export const getVersion = (state: TTState): string => "1";
+
+// Get whether or not there's a pending confirmation.
+export const getIsPendingConfirmation = (state: TTState): boolean => {
+  return state.view.confirm != null;
+};
+
+// Get the confirmation message to be shown in the confirm action dialog.
+export const getConfirmationMessage = (state: TTState): string => {
+  return state.view.confirm!.action.type;
+};
+
+// Get the action that is pending confirmation.
+export const getConfirmationAction = (state: TTState): TTAction => {
+  return state.view.confirm!.action;
+};

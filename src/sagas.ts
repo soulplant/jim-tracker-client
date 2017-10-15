@@ -1,6 +1,8 @@
 import {
   ADD_USER,
   AddUserAction,
+  CONFIRMATION_RECEIVED,
+  ConfirmationReceivedAction,
   INITIAL_LOAD_START,
   InitialLoadData,
   REPOSITION_USER,
@@ -47,6 +49,13 @@ function* handleInitialLoad(api: ApiServiceApi) {
 
 export function* watchAddUser(api: ApiServiceApi) {
   yield takeEvery(ADD_USER, handleAddUser, api);
+}
+
+// Executes confirmed actions.
+export function* watchConfirmedActions() {
+  yield takeEvery(CONFIRMATION_RECEIVED, function*(action: ConfirmationReceivedAction) {
+    yield put(action.action);
+  })
 }
 
 function* handleAddUser(api: ApiServiceApi, action: AddUserAction) {

@@ -15,6 +15,10 @@ export type TTAction =
   | AddUserAction
   | RepositionUserAction
   | ResolveRepositionAction
+  | CompleteTalkAction
+  | ConfirmationRequestedAction
+  | ConfirmationReceivedAction
+  | ConfirmationRejectedAction
   | UpdateLocalIdAction;
 
 export interface InitialLoadData {
@@ -36,6 +40,10 @@ export const UPDATE_USER_TEXT = "UPDATE_USER_TEXT";
 export const REPOSITION_USER = "REPOSITION_USER";
 export const RESOLVE_REPOSITION = "RESOLVE_REPOSITION";
 export const UPDATE_LOCAL_ID = "UPDATE_LOCAL_ID";
+export const COMPLETE_TALK = "COMPLETE_TALK";
+export const CONFIRMATION_REQUESTED = "CONFIRMATION_REQUESTED";
+export const CONFIRMATION_RECEIVED = "CONFIRMATION_RECEIVED";
+export const CONFIRMATION_REJECTED = "CONFIRMATION_REJECTED";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -105,6 +113,25 @@ export interface UpdateLocalIdAction extends Action {
   idType: "user";
   localId: string;
   remoteId: string;
+}
+
+export interface CompleteTalkAction extends Action {
+  type: typeof COMPLETE_TALK;
+  userId: string;
+}
+
+export interface ConfirmationRequestedAction extends Action {
+  type: typeof CONFIRMATION_REQUESTED;
+  action: Action;
+}
+
+export interface ConfirmationReceivedAction extends Action {
+  type: typeof CONFIRMATION_RECEIVED;
+  action: TTAction;
+}
+
+export interface ConfirmationRejectedAction extends Action {
+  type: typeof CONFIRMATION_REJECTED;
 }
 
 export const init = (): InitAction => ({
@@ -202,4 +229,27 @@ export const updateLocalId = (
   idType,
   localId,
   remoteId,
+});
+
+export const completeTalk = (userId: string): CompleteTalkAction => ({
+  type: COMPLETE_TALK,
+  userId,
+});
+
+export const confirmationRequested = (
+  action: Action
+): ConfirmationRequestedAction => ({
+  type: CONFIRMATION_REQUESTED,
+  action,
+});
+
+export const confirmationReceived = (
+  action: TTAction
+): ConfirmationReceivedAction => ({
+  type: CONFIRMATION_RECEIVED,
+  action,
+});
+
+export const confirmationRejected = (): ConfirmationRejectedAction => ({
+  type: CONFIRMATION_REJECTED,
 });
