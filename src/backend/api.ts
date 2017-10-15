@@ -322,7 +322,7 @@ export interface ApiUpdateUserRequest {
      * @type {string}
      * @memberof ApiUpdateUserRequest
      */
-    nextTalkName?: string;
+    nextTalk?: string;
 }
 
 /**

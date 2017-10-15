@@ -24,6 +24,7 @@ import {
   ApiReorderRequest,
   ApiReorderResponse,
   ApiServiceApi,
+  ApiUpdateUserRequest,
 } from "./backend/api";
 import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import {
@@ -112,11 +113,7 @@ export function* watchUserChanges(api: ApiServiceApi) {
 }
 
 function* updateUserChange(api: ApiServiceApi, action: UpdateUserAction) {
-  // TODO(james): Rename the server field to nextTalkName.
-  const req = {
-    name: action.updates.name,
-    nextTalkName: action.updates.nextTalk,
-  };
+  const req: ApiUpdateUserRequest = { ...action.updates };
   yield call([api, api.updateUser], action.userId, req);
 }
 
