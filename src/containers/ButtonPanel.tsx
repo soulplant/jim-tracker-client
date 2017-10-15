@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { Dispatch, bindActionCreators } from "redux";
 import { TTState, User } from "../types";
 import {
   addUser,
@@ -31,16 +30,14 @@ interface DispatchProps {
   startEditMode: typeof startEditMode;
   endEditMode: typeof endEditMode;
   escapePressed: typeof escapePressed;
-
-  // TODO(james): Don't invent this, just use the action creator for
-  // confirmationRequested().
-  completeTalk(userId: string, userName: string): void;
+  confirmationRequested: typeof confirmationRequested;
 }
 
 class ButtonPanel extends React.Component<Props & DispatchProps, {}> {
   completeTalk = () => {
     const user = this.props.users[0];
-    return this.props.completeTalk(user.id, user.name);
+    const message = "Mark " + addApostropheS(user.name) + " talk as done?";
+    return this.props.confirmationRequested(completeTalk(user.id), "", message);
   };
 
   render() {
@@ -85,26 +82,13 @@ const mapStateToProps = (state: TTState): Props => ({
   isEditMode: getIsEditMode(state),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
-  completeTalk(userId: string, userName: string) {
-    dispatch(
-      confirmationRequested(
-        completeTalk(userId),
-        "Please Confirm",
-        "Mark " + addApostropheS(userName) + " talk as done?"
-      )
-    );
-  },
-  ...bindActionCreators(
-    {
-      addUser,
-      startEditMode,
-      endEditMode,
-      escapePressed,
-    },
-    dispatch
-  ),
-});
+const mapDispatchToProps = {
+  addUser,
+  startEditMode,
+  endEditMode,
+  escapePressed,
+  confirmationRequested,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ButtonPanel);
 
