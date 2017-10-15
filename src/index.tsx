@@ -11,6 +11,7 @@ import {
   watchInitialLoad,
   watchRepositions,
   watchUserChanges,
+  watchUserRemovals,
 } from "./sagas";
 
 import { ApiServiceApi } from "./backend/api";
@@ -41,6 +42,7 @@ sagaMiddleware.run(watchAddUser, api);
 sagaMiddleware.run(watchUserChanges, api);
 sagaMiddleware.run(watchRepositions, api);
 sagaMiddleware.run(watchConfirmedActions);
+sagaMiddleware.run(watchUserRemovals, api);
 
 store.dispatch(initialLoadStart());
 

@@ -7,6 +7,7 @@ import {
   INCREMENT,
   INITIAL_LOAD_START,
   INITIAL_LOAD_SUCCESS,
+  REMOVE_USER_FROM_ROTATION,
   REPOSITION_USER,
   RESOLVE_REPOSITION,
   SCHEDULE_NEW_TALK,
@@ -45,13 +46,13 @@ function getIds<T extends { id: string }>(ts: T[]): string[] {
 }
 
 export function userReducer(
-  userState: UserState = { byId: {}, order: [], nextLocalId: -1 },
+  state: UserState = { byId: {}, order: [], nextLocalId: -1 },
   action: TTAction
 ): UserState {
   switch (action.type) {
     case INITIAL_LOAD_SUCCESS:
       return {
-        ...userState,
+        ...state,
         byId: splitById(action.data.user),
         order: getIds(action.data.user),
       };
@@ -62,41 +63,41 @@ export function userReducer(
         nextTalk: "",
       };
       return {
-        ...userState,
+        ...state,
         byId: {
-          ...userState.byId,
+          ...state.byId,
           [user.id]: user,
         },
-        order: [...userState.order, user.id],
-        nextLocalId: userState.nextLocalId - 1,
+        order: [...state.order, user.id],
+        nextLocalId: state.nextLocalId - 1,
       };
     }
     case UPDATE_LOCAL_ID: {
       if (action.idType !== "user") {
-        return userState;
+        return state;
       }
-      const newById = { ...userState.byId };
+      const newById = { ...state.byId };
       const updatedUser = {
-        ...userState.byId[action.localId],
+        ...state.byId[action.localId],
         id: action.remoteId,
       } as User;
       delete newById[action.localId];
       newById[updatedUser.id] = updatedUser;
-      const newOrder = userState.order.map(
+      const newOrder = state.order.map(
         id => (id === action.localId ? action.remoteId : id)
       );
       return {
-        ...userState,
+        ...state,
         byId: newById,
         order: newOrder,
       };
     }
     case SET_USER_NAME: {
-      const user = userState.byId[action.userId];
+      const user = state.byId[action.userId];
       return {
-        ...userState,
+        ...state,
         byId: {
-          ...userState.byId,
+          ...state.byId,
           [user.id]: {
             ...user,
             name: action.name,
@@ -105,11 +106,11 @@ export function userReducer(
       };
     }
     case SET_NEXT_TALK_NAME: {
-      const user = userState.byId[action.userId];
+      const user = state.byId[action.userId];
       return {
-        ...userState,
+        ...state,
         byId: {
-          ...userState.byId,
+          ...state.byId,
           [user.id]: {
             ...user,
             nextTalk: action.name,
@@ -119,17 +120,25 @@ export function userReducer(
     }
     case REPOSITION_USER: {
       return {
-        ...userState,
+        ...state,
         order: reorder(
-          userState.order,
+          state.order,
           action.movedUserId,
           action.anchorUserId,
           action.before
         ),
       };
     }
+    case REMOVE_USER_FROM_ROTATION: {
+      const { [action.userId]: removed, ...byId } = state.byId;
+      return {
+        ...state,
+        byId,
+        order: state.order.filter(id => action.userId !== id),
+      };
+    }
     default:
-      return userState;
+      return state;
   }
 }
 

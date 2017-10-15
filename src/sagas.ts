@@ -5,7 +5,9 @@ import {
   ConfirmationReceivedAction,
   INITIAL_LOAD_START,
   InitialLoadData,
+  REMOVE_USER_FROM_ROTATION,
   REPOSITION_USER,
+  RemoveUserFromRotationAction,
   RepositionUserAction,
   SET_NEXT_TALK_NAME,
   SET_USER_NAME,
@@ -53,9 +55,11 @@ export function* watchAddUser(api: ApiServiceApi) {
 
 // Executes confirmed actions.
 export function* watchConfirmedActions() {
-  yield takeEvery(CONFIRMATION_RECEIVED, function*(action: ConfirmationReceivedAction) {
+  yield takeEvery(CONFIRMATION_RECEIVED, function*(
+    action: ConfirmationReceivedAction
+  ) {
     yield put(action.action);
-  })
+  });
 }
 
 function* handleAddUser(api: ApiServiceApi, action: AddUserAction) {
@@ -126,5 +130,23 @@ function* updateUserChange(
     };
     yield call([api, api.updateUser], action.userId, req);
     return;
+  }
+}
+
+// Watches for when a user gets removed from the rotation and relays that to the
+// server.
+export function* watchUserRemovals(api: ApiServiceApi) {
+  yield takeEvery(REMOVE_USER_FROM_ROTATION, applyUserRemovals, api);
+}
+
+function* applyUserRemovals(
+  api: ApiServiceApi,
+  action: RemoveUserFromRotationAction
+) {
+  try {
+    yield call([api, api.removeUser], action.userId);
+  } catch (e) {
+    // TODO(james): Handle failed removals by reloading the app.
+    throw e;
   }
 }

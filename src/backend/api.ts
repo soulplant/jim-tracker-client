@@ -182,6 +182,14 @@ export interface ApiGetUsersResponse {
 /**
  * 
  * @export
+ * @interface ApiRemoveUserResponse
+ */
+export interface ApiRemoveUserResponse {
+}
+
+/**
+ * 
+ * @export
  * @interface ApiReorderRequest
  */
 export interface ApiReorderRequest {
@@ -442,6 +450,34 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeUser(userId: string, options: any = {}): FetchArgs {
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling removeUser.');
+            }
+            const path = `/v1/user/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'DELETE' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Change the position of one user in the list of upcoming talks.
          * @param {ApiReorderRequest} body 
          * @param {*} [options] Override http request option.
@@ -588,6 +624,24 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeUser(userId: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiRemoveUserResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).removeUser(userId, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @summary Change the position of one user in the list of upcoming talks.
          * @param {ApiReorderRequest} body 
          * @param {*} [options] Override http request option.
@@ -669,6 +723,15 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeUser(userId: string, options?: any) {
+            return ApiServiceApiFp(configuration).removeUser(userId, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @summary Change the position of one user in the list of upcoming talks.
          * @param {ApiReorderRequest} body 
          * @param {*} [options] Override http request option.
@@ -737,6 +800,17 @@ export class ApiServiceApi extends BaseAPI {
      */
     public getUsers(options?: any) {
         return ApiServiceApiFp(this.configuration).getUsers(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public removeUser(userId: string, options?: any) {
+        return ApiServiceApiFp(this.configuration).removeUser(userId, options)(this.fetch, this.basePath);
     }
 
     /**
