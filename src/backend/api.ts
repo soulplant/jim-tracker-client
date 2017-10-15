@@ -136,6 +136,28 @@ export interface ApiAddUserResponse {
 /**
  * 
  * @export
+ * @interface ApiCompleteTalkRequest
+ */
+export interface ApiCompleteTalkRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiCompleteTalkRequest
+     */
+    userId?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiCompleteTalkResponse
+ */
+export interface ApiCompleteTalkResponse {
+}
+
+/**
+ * 
+ * @export
  * @interface ApiFetchAllResponse
  */
 export interface ApiFetchAllResponse {
@@ -406,6 +428,36 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * 
+         * @param {ApiCompleteTalkRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completeTalk(body: ApiCompleteTalkRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling completeTalk.');
+            }
+            const path = `/v1/talk/complete`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -590,6 +642,24 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {ApiCompleteTalkRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completeTalk(body: ApiCompleteTalkRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiCompleteTalkResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).completeTalk(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -707,6 +777,15 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * 
+         * @param {ApiCompleteTalkRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        completeTalk(body: ApiCompleteTalkRequest, options?: any) {
+            return ApiServiceApiFp(configuration).completeTalk(body, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -780,6 +859,17 @@ export class ApiServiceApi extends BaseAPI {
      */
     public addUser(body: ApiAddUserRequest, options?: any) {
         return ApiServiceApiFp(this.configuration).addUser(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public completeTalk(body: ApiCompleteTalkRequest, options?: any) {
+        return ApiServiceApiFp(this.configuration).completeTalk(body, options)(this.fetch, this.basePath);
     }
 
     /**
