@@ -70,7 +70,7 @@ export function userReducer(
       };
     }
     case UPDATE_LOCAL_ID: {
-      if (action.idType != "user") {
+      if (action.idType !== "user") {
         return userState;
       }
       const newById = { ...userState.byId };
@@ -81,7 +81,7 @@ export function userReducer(
       delete newById[action.localId];
       newById[updatedUser.id] = updatedUser;
       const newOrder = userState.order.map(
-        id => (id == action.localId ? action.remoteId : id)
+        id => (id === action.localId ? action.remoteId : id)
       );
       return {
         ...userState,
@@ -259,8 +259,9 @@ const requestQueue = (
         pending: state.pending.slice(1),
       };
     }
+    default:
+      return state;
   }
-  return state;
 };
 
 export const reducer = combineReducers<TTState>({

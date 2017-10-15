@@ -57,7 +57,7 @@ export const getNextUserId = (state: TTState): string => {
 // Whether or not there are any users with a local id, implying the server won't recognise it.
 export const getAnyLocalIds = (state: TTState): boolean => {
   const ids = Object.keys(state.entities.user.byId);
-  return ids.findIndex(id => id.startsWith("-")) != -1;
+  return ids.findIndex(id => id.startsWith("-")) !== -1;
 };
 
 // Get the next reposition request that is to be completed.

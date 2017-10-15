@@ -33,23 +33,34 @@ const mapDispatchToProps: DispatchProps = {
 };
 
 class ConfirmationDialog extends React.Component<Props & DispatchProps, {}> {
-  confirmationReceived = () => this.props.confirmationReceived(this.props.action);
+  confirmationReceived = () =>
+    this.props.confirmationReceived(this.props.action);
 
   render() {
-    return <div className="modal is-active">
-      <div className="modal-background"></div>
-      <div className="modal-content">
-        <div className="box content">
-          <h2>Please confirm</h2>
-          <p>{this.props.message}</p>
-          <br />
-          <div>
-            <div style={{marginRight: '1em'}} className="button is-primary" onClick={this.confirmationReceived}>Confirm</div>
-            <div className="button" onClick={this.props.confirmationRejected}>Cancel</div>
+    return (
+      <div className="modal is-active">
+        <div className="modal-background" />
+        <div className="modal-content">
+          <div className="box content">
+            <h2>Please confirm</h2>
+            <p>{this.props.message}</p>
+            <br />
+            <div>
+              <div
+                style={{ marginRight: "1em" }}
+                className="button is-primary"
+                onClick={this.confirmationReceived}
+              >
+                Confirm
+              </div>
+              <div className="button" onClick={this.props.confirmationRejected}>
+                Cancel
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      </div>;
+    );
   }
 }
 

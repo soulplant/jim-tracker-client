@@ -43,7 +43,7 @@ class App2 extends React.Component<Props & DispatchProps, {}> {
               {this.props.users.map((u, i) => (
                 <UserRow
                   userId={u.id}
-                  highlight={i == 0}
+                  highlight={i === 0}
                   repositionUser={this.props.repositionUser}
                 />
               ))}
@@ -61,7 +61,7 @@ class App2 extends React.Component<Props & DispatchProps, {}> {
             </a>
             {/* TODO(james): Clicking this should replace the date field with a delete button. */}
             <a className="button is-link">Edit Schedule</a>
-            <button className="button is-link" disabled>
+            <button className="button is-link" disabled={true}>
               History
             </button>
           </div>

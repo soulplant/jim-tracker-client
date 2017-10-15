@@ -112,14 +112,14 @@ function* updateUserChange(
   api: ApiServiceApi,
   action: SetUserNameAction | SetNextTalkNameAction
 ) {
-  if (action.type == SET_USER_NAME) {
+  if (action.type === SET_USER_NAME) {
     const req = {
       name: action.name,
     };
     yield call([api, api.updateUser], action.userId, req);
     return;
   }
-  if (action.type == SET_NEXT_TALK_NAME) {
+  if (action.type === SET_NEXT_TALK_NAME) {
     const req = {
       id: action.userId,
       nextTalkName: action.name,
