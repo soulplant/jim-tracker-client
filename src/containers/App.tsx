@@ -53,14 +53,18 @@ class App extends React.Component<Props & DispatchProps, {}> {
             </tbody>
           </table>
           <div className="button-kontainer">
-            <a className="button is-primary" onClick={this.completeTalk}>
-              Talk complete
-            </a>
+            <button
+              className="button is-primary"
+              disabled={this.props.isEditMode}
+              onClick={this.completeTalk}
+            >
+              Talk Complete
+            </button>
             <a
               className="button is-link"
               onClick={() => this.props.addUser(this.props.nextUserId, "")}
             >
-              Add speaker
+              Add Speaker
             </a>
             {/* TODO(james): Clicking this should replace the date field with a delete button. */}
 
