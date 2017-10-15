@@ -66,7 +66,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
           <div className="button-kontainer">
             <button
               className="button is-primary"
-              disabled={this.props.isEditMode}
+              disabled={this.props.isEditMode || this.props.users.length === 0}
               onClick={this.completeTalk}
             >
               Talk Complete
