@@ -29,7 +29,10 @@ import UserRow from "./UserRow";
 import { connect } from "react-redux";
 
 class App extends React.Component<Props & DispatchProps, {}> {
-  completeTalk = () => this.props.completeTalk(this.props.users[0].id);
+  completeTalk = () => {
+    const user = this.props.users[0];
+    return this.props.completeTalk(user.id, user.name);
+  };
 
   render(): false | JSX.Element | null {
     return (
@@ -101,7 +104,7 @@ interface DispatchProps {
     before: boolean
   ): RepositionUserAction;
   addUser(localId: string, name: string): AddUserAction;
-  completeTalk(userId: string): void;
+  completeTalk(userId: string, userName: string): void;
   startEditMode(): StartEditModeAction;
   endEditMode(): EndEditModeAction;
 }
@@ -114,8 +117,14 @@ const mapStateToProps = (state: TTState): Props => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
-  completeTalk(userId: string) {
-    dispatch(confirmationRequested(completeTalk(userId)));
+  completeTalk(userId: string, userName: string) {
+    dispatch(
+      confirmationRequested(
+        completeTalk(userId),
+        "Please Confirm",
+        "Mark " + addApostropheS(userName) + " talk as done?"
+      )
+    );
   },
   ...bindActionCreators(
     {
@@ -131,3 +140,11 @@ const mapDispatchToProps = (dispatch: Dispatch<TTState>): DispatchProps => ({
 export default DragDropContext(HTML5Backend)(
   connect<Props, DispatchProps>(mapStateToProps, mapDispatchToProps)(App)
 );
+
+// Adds an "'s" to names, handling the 's' suffix anomaly.
+const addApostropheS = (name: string): string => {
+  if (name[name.length - 1] === "s") {
+    return name + "'";
+  }
+  return name + "'s";
+};

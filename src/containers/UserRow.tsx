@@ -140,7 +140,9 @@ class UserRow extends React.Component<
   removeUser = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     this.props.confirmationRequested(
-      removeUserFromRotation(this.props.user.id)
+      removeUserFromRotation(this.props.user.id),
+      "",
+      "Remove " + this.props.user.name + "?"
     );
   };
 

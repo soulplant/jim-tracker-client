@@ -129,6 +129,8 @@ export interface CompleteTalkAction extends Action {
 export interface ConfirmationRequestedAction extends Action {
   type: typeof CONFIRMATION_REQUESTED;
   action: Action;
+  title: string;
+  message: string;
 }
 
 export interface ConfirmationReceivedAction extends Action {
@@ -256,10 +258,14 @@ export const completeTalk = (userId: string): CompleteTalkAction => ({
 });
 
 export const confirmationRequested = (
-  action: Action
+  action: Action,
+  title: string,
+  message: string
 ): ConfirmationRequestedAction => ({
   type: CONFIRMATION_REQUESTED,
   action,
+  title,
+  message,
 });
 
 export const confirmationReceived = (

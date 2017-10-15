@@ -239,7 +239,7 @@ const confirmReducer = (
 ): ConfirmState | null => {
   switch (action.type) {
     case CONFIRMATION_REQUESTED: {
-      return { ...state, action: action.action };
+      return { ...state, ...action };
     }
     case CONFIRMATION_RECEIVED:
     case CONFIRMATION_REJECTED:

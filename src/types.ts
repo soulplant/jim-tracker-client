@@ -40,7 +40,8 @@ export interface TalkState {
 
 export interface ConfirmState {
   action: TTAction;
-  // TODO(james): Allow callers to specify a message that goes in the popup.
+  title: string;
+  message: string;
 }
 
 export interface ViewState {

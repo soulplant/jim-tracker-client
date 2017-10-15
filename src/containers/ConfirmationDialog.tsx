@@ -7,12 +7,17 @@ import {
   confirmationReceived,
   confirmationRejected,
 } from "../actions";
-import { getConfirmationAction, getConfirmationMessage } from "../selectors";
+import {
+  getConfirmationAction,
+  getConfirmationMessage,
+  getConfirmationTitle,
+} from "../selectors";
 
 import { TTState } from "../types";
 import { connect } from "react-redux";
 
 interface Props {
+  title: string;
   message: string;
   action: TTAction;
 }
@@ -23,6 +28,7 @@ interface DispatchProps {
 }
 
 const mapStateToProps = (state: TTState): Props => ({
+  title: getConfirmationTitle(state),
   message: getConfirmationMessage(state),
   action: getConfirmationAction(state),
 });
@@ -42,7 +48,7 @@ class ConfirmationDialog extends React.Component<Props & DispatchProps, {}> {
         <div className="modal-background" />
         <div className="modal-content">
           <div className="box content">
-            <h2>Please confirm</h2>
+            <h2>{this.props.title || "Please Confirm"}</h2>
             <p>{this.props.message}</p>
             <br />
             <div>
@@ -51,7 +57,7 @@ class ConfirmationDialog extends React.Component<Props & DispatchProps, {}> {
                 className="button is-primary"
                 onClick={this.confirmationReceived}
               >
-                Confirm
+                Ok
               </div>
               <div className="button" onClick={this.props.confirmationRejected}>
                 Cancel

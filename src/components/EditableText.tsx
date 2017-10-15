@@ -63,6 +63,7 @@ export default class EditableText extends React.Component<OwnProps, State> {
   render() {
     return this.state.isEditing ? (
       <input
+        className="input"
         ref={value => (this.input = value)}
         autoFocus={true}
         type="text"

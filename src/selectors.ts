@@ -75,9 +75,14 @@ export const getIsPendingConfirmation = (state: TTState): boolean => {
   return state.view.confirm != null;
 };
 
+// Get the confirmation title to be shown in the confirm action dialog.
+export const getConfirmationTitle = (state: TTState): string => {
+  return state.view.confirm!.title;
+};
+
 // Get the confirmation message to be shown in the confirm action dialog.
 export const getConfirmationMessage = (state: TTState): string => {
-  return state.view.confirm!.action.type;
+  return state.view.confirm!.message;
 };
 
 // Get the action that is pending confirmation.
