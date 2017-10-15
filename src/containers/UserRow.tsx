@@ -13,13 +13,14 @@ import {
 } from "react-dnd";
 import { StyleSheet, css } from "aphrodite";
 import { TTState, User } from "../types";
-import { getIsEditMode, getUserById } from "../selectors";
 import {
+  confirmationRequested,
   removeUserFromRotation,
   repositionUser,
   setNextTalkName,
   setUserName,
 } from "../actions";
+import { getIsEditMode, getUserById } from "../selectors";
 
 import EditableText from "../components/EditableText";
 import { compose } from "redux";
@@ -34,7 +35,7 @@ interface Props {
 interface DispatchProps {
   setUserName: typeof setUserName;
   setNextTalkName: typeof setNextTalkName;
-  removeUserFromRotation: typeof removeUserFromRotation;
+  confirmationRequested: typeof confirmationRequested;
 }
 
 interface OwnProps {
@@ -138,7 +139,9 @@ class UserRow extends React.Component<
 > {
   removeUser = (e: React.SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    this.props.removeUserFromRotation(this.props.user.id);
+    this.props.confirmationRequested(
+      removeUserFromRotation(this.props.user.id)
+    );
   };
 
   componentDidMount() {
@@ -206,7 +209,7 @@ const mapDispatchToProps = {
   setUserName,
   setNextTalkName,
   repositionUser,
-  removeUserFromRotation,
+  confirmationRequested,
 };
 
 const Output = compose(
