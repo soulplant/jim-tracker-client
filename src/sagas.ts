@@ -1,7 +1,9 @@
 import {
   ADD_USER,
   AddUserAction,
+  COMPLETE_TALK,
   CONFIRMATION_RECEIVED,
+  CompleteTalkAction,
   ConfirmationReceivedAction,
   INITIAL_LOAD_START,
   InitialLoadData,
@@ -9,11 +11,9 @@ import {
   REPOSITION_USER,
   RemoveUserFromRotationAction,
   RepositionUserAction,
-  SET_NEXT_TALK_NAME,
-  SET_USER_NAME,
-  SetNextTalkNameAction,
-  SetUserNameAction,
   UPDATE_LOCAL_ID,
+  UPDATE_USER,
+  UpdateUserAction,
   initialLoadSuccess,
   resolveReposition,
   updateLocalId,
@@ -33,10 +33,10 @@ import {
 } from "./selectors";
 
 export function* watchInitialLoad(api: ApiServiceApi) {
-  yield takeEvery(INITIAL_LOAD_START, handleInitialLoad, api);
+  yield takeEvery(INITIAL_LOAD_START, performInitialLoad, api);
 }
 
-function* handleInitialLoad(api: ApiServiceApi) {
+function* performInitialLoad(api: ApiServiceApi) {
   const data: ApiFetchAllResponse = yield call([api, api.fetchAll]);
   // We do a risky cast here because the types just "happen" to line up, except that the client's
   // fields aren't nullable. We don't expect the server to ever send null fields though.
@@ -108,29 +108,16 @@ export function* attemptReposition(api: ApiServiceApi): IterableIterator<{}> {
 }
 
 export function* watchUserChanges(api: ApiServiceApi) {
-  // TODO(james): Merge these two actions.
-  yield takeEvery([SET_USER_NAME, SET_NEXT_TALK_NAME], updateUserChange, api);
+  yield takeEvery([UPDATE_USER], updateUserChange, api);
 }
 
-function* updateUserChange(
-  api: ApiServiceApi,
-  action: SetUserNameAction | SetNextTalkNameAction
-) {
-  if (action.type === SET_USER_NAME) {
-    const req = {
-      name: action.name,
-    };
-    yield call([api, api.updateUser], action.userId, req);
-    return;
-  }
-  if (action.type === SET_NEXT_TALK_NAME) {
-    const req = {
-      id: action.userId,
-      nextTalkName: action.name,
-    };
-    yield call([api, api.updateUser], action.userId, req);
-    return;
-  }
+function* updateUserChange(api: ApiServiceApi, action: UpdateUserAction) {
+  // TODO(james): Rename the server field to nextTalkName.
+  const req = {
+    name: action.updates.name,
+    nextTalkName: action.updates.nextTalk,
+  };
+  yield call([api, api.updateUser], action.userId, req);
 }
 
 // Watches for when a user gets removed from the rotation and relays that to the
@@ -149,4 +136,15 @@ function* applyUserRemovals(
     // TODO(james): Handle failed removals by reloading the app.
     throw e;
   }
+}
+
+export function* watchTalkCompletions(api: ApiServiceApi) {
+  yield takeEvery(COMPLETE_TALK, applyTalkCompletions, api);
+}
+
+function* applyTalkCompletions(api: ApiServiceApi, action: CompleteTalkAction) {
+  yield call([api, api.completeTalk], {
+    userId: action.userId,
+  });
+  yield call(performInitialLoad, api);
 }

@@ -17,8 +17,7 @@ import {
   confirmationRequested,
   removeUserFromRotation,
   repositionUser,
-  setNextTalkName,
-  setUserName,
+  updateUser,
 } from "../actions";
 import { getIsEditMode, getUserById } from "../selectors";
 
@@ -33,8 +32,7 @@ interface Props {
 }
 
 interface DispatchProps {
-  setUserName: typeof setUserName;
-  setNextTalkName: typeof setNextTalkName;
+  updateUser: typeof updateUser;
   confirmationRequested: typeof confirmationRequested;
 }
 
@@ -172,7 +170,7 @@ class UserRow extends React.Component<
               value={this.props.user.name}
               placeholder="(unknown)"
               setValue={value =>
-                this.props.setUserName(this.props.userId, value)}
+                this.props.updateUser(this.props.userId, { name: value })}
             />
           </td>
           <td>
@@ -180,7 +178,7 @@ class UserRow extends React.Component<
               value={this.props.user.nextTalk}
               placeholder="(untitled)"
               setValue={value =>
-                this.props.setNextTalkName(this.props.userId, value)}
+                this.props.updateUser(this.props.userId, { nextTalk: value })}
             />
           </td>
           <td className={css(styles.dateColumn)}>
@@ -208,8 +206,7 @@ const mapStateToProps = (state: TTState, ownProps: OwnProps): Props => ({
 });
 
 const mapDispatchToProps = {
-  setUserName,
-  setNextTalkName,
+  updateUser,
   repositionUser,
   confirmationRequested,
 };

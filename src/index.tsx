@@ -10,6 +10,7 @@ import {
   watchConfirmedActions,
   watchInitialLoad,
   watchRepositions,
+  watchTalkCompletions,
   watchUserChanges,
   watchUserRemovals,
 } from "./sagas";
@@ -43,6 +44,7 @@ sagaMiddleware.run(watchUserChanges, api);
 sagaMiddleware.run(watchRepositions, api);
 sagaMiddleware.run(watchConfirmedActions);
 sagaMiddleware.run(watchUserRemovals, api);
+sagaMiddleware.run(watchTalkCompletions, api);
 
 store.dispatch(initialLoadStart());
 

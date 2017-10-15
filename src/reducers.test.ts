@@ -4,8 +4,8 @@ import {
   init,
   initialLoadSuccess,
   scheduleNewTalk,
-  setNextTalkName,
   toggleTalk,
+  updateUser,
 } from "./actions";
 import { getAllTalks, getAllUsers, getSpeaker, getTalkById } from "./selectors";
 import { reducer, userReducer } from "./reducers";
@@ -91,8 +91,15 @@ describe("user reducer", () => {
     let state = userReducer(undefined, init());
     state = userReducer(state, addUser(state.nextLocalId + "", "james"));
     expect(state.byId[state.order[0]].nextTalk).toBe("");
-    state = userReducer(state, setNextTalkName(state.order[0], "foo"));
+    state = userReducer(state, updateUser(state.order[0], { nextTalk: "foo" }));
     expect(state.byId[state.order[0]].nextTalk).toBe("foo");
+  });
+
+  it("allows users to set the name of users", () => {
+    let state = userReducer(undefined, init());
+    state = userReducer(state, addUser(state.nextLocalId + "", "james"));
+    state = userReducer(state, updateUser(state.order[0], { name: "flames" }));
+    expect(state.byId[state.order[0]].name).toBe("flames");
   });
 
   it("updates the next local id correctly", () => {

@@ -12,13 +12,12 @@ import {
   REPOSITION_USER,
   RESOLVE_REPOSITION,
   SCHEDULE_NEW_TALK,
-  SET_NEXT_TALK_NAME,
   SET_TALK_NAME,
-  SET_USER_NAME,
   START_EDIT_MODE,
   TOGGLE_TALK,
   TTAction,
   UPDATE_LOCAL_ID,
+  UPDATE_USER,
 } from "./actions";
 import {
   ConfirmState,
@@ -93,7 +92,7 @@ export function userReducer(
         order: newOrder,
       };
     }
-    case SET_USER_NAME: {
+    case UPDATE_USER: {
       const user = state.byId[action.userId];
       return {
         ...state,
@@ -101,20 +100,7 @@ export function userReducer(
           ...state.byId,
           [user.id]: {
             ...user,
-            name: action.name,
-          },
-        },
-      };
-    }
-    case SET_NEXT_TALK_NAME: {
-      const user = state.byId[action.userId];
-      return {
-        ...state,
-        byId: {
-          ...state.byId,
-          [user.id]: {
-            ...user,
-            nextTalk: action.name,
+            ...action.updates,
           },
         },
       };

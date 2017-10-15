@@ -9,8 +9,7 @@ export type TTAction =
   | IncrementAction
   | ToggleTalkAction
   | SetTalkNameAction
-  | SetUserNameAction
-  | SetNextTalkNameAction
+  | UpdateUserAction
   | ScheduleNewTalkAction
   | AddUserAction
   | RepositionUserAction
@@ -37,6 +36,7 @@ export const INCREMENT = "INCREMENT";
 export const TOGGLE_TALK = "TOGGLE_TALK";
 export const SET_TALK_NAME = "SET_TALK_NAME";
 export const SET_NEXT_TALK_NAME = "SET_NEXT_TALK_NAME";
+export const UPDATE_USER = "UPDATE_USER";
 export const SET_USER_NAME = "SET_USER_NAME";
 export const SCHEDULE_NEW_TALK = "SCHEDULE_NEW_TALK";
 export const ADD_USER = "ADD_USER";
@@ -81,16 +81,13 @@ export interface SetTalkNameAction extends Action {
   name: string;
 }
 
-export interface SetUserNameAction extends Action {
-  type: typeof SET_USER_NAME;
+export interface UpdateUserAction extends Action {
+  type: typeof UPDATE_USER;
   userId: string;
-  name: string;
-}
-
-export interface SetNextTalkNameAction extends Action {
-  type: typeof SET_NEXT_TALK_NAME;
-  userId: string;
-  name: string;
+  updates: {
+    name?: string;
+    nextTalk?: string;
+  };
 }
 
 export interface ScheduleNewTalkAction extends Action {
@@ -202,24 +199,17 @@ export const setTalkName = (
   name,
 });
 
-// Sets the name of the next talk someone is doing.
-export const setNextTalkName = (
+// Update various user fields.
+export const updateUser = (
   userId: string,
-  name: string
-): SetNextTalkNameAction => ({
-  type: SET_NEXT_TALK_NAME,
+  updates: {
+    name?: string;
+    nextTalk?: string;
+  }
+): UpdateUserAction => ({
+  type: UPDATE_USER,
   userId,
-  name,
-});
-
-// Sets a user's name.
-export const setUserName = (
-  userId: string,
-  name: string
-): SetUserNameAction => ({
-  type: SET_USER_NAME,
-  userId,
-  name,
+  updates,
 });
 
 // Adds a new user to the list.
