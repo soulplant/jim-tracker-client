@@ -129,6 +129,12 @@ const styles = StyleSheet.create({
     opacity: 0,
     height: 0,
   },
+  tr: {
+    height: "3.5em",
+  },
+  td: {
+    verticalAlign: "middle",
+  },
 });
 
 class UserRow extends React.Component<
@@ -160,12 +166,13 @@ class UserRow extends React.Component<
               : "") +
             " " +
             css(
+              styles.tr,
               this.props.isEditMode && styles.editMode,
               this.props.isDragging && styles.isDragging
             )
           }
         >
-          <td>
+          <td className={css(styles.td)}>
             <EditableText
               value={this.props.user.name}
               placeholder="(unknown)"
@@ -173,7 +180,7 @@ class UserRow extends React.Component<
                 this.props.updateUser(this.props.userId, { name: value })}
             />
           </td>
-          <td>
+          <td className={css(styles.td)}>
             <EditableText
               value={this.props.user.nextTalk}
               placeholder="(untitled)"
@@ -181,7 +188,7 @@ class UserRow extends React.Component<
                 this.props.updateUser(this.props.userId, { nextTalk: value })}
             />
           </td>
-          <td className={css(styles.dateColumn)}>
+          <td className={css(styles.td, styles.dateColumn)}>
             {this.props.isEditMode ? (
               <a
                 href="#"

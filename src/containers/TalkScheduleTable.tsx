@@ -15,7 +15,7 @@ class TalkScheduleTable extends React.Component<Props, {}> {
       <table className="table">
         <thead>
           <tr>
-            <th>Speaker</th>
+            <th style={{ width: "10em" }}>Speaker</th>
             <th>Talk</th>
             <th>Date</th>
           </tr>
