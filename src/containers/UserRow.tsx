@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
   },
   isDragging: {
     opacity: 0,
-    height: 0,
   },
   tr: {
     height: "3.5em",
