@@ -6,9 +6,11 @@ import {
   scheduleNewTalk,
   toggleTalk,
   updateUser,
+  repositionUser,
+  updateLocalId,
 } from "./actions";
 import { getAllTalks, getAllUsers, getSpeaker, getTalkById } from "./selectors";
-import { reducer, userReducer } from "./reducers";
+import { reducer, userReducer, requestQueue } from "./reducers";
 
 import { createStore } from "redux";
 
@@ -106,5 +108,23 @@ describe("user reducer", () => {
     let state = userReducer(undefined, init());
     state = userReducer(state, addUser(state.nextLocalId + "", "james"));
     expect(state.nextLocalId).toBe(-2);
+  });
+});
+
+describe("queue reducer", () => {
+  it("updates pending actions when a local id is resolved", () => {
+    let state = requestQueue(undefined, init());
+    state = requestQueue(state, repositionUser("-1", "5", true));
+    state = requestQueue(state, updateLocalId("user", "-1", "123"));
+    expect(state.pending[0].movedUserId).toBe("123");
+    expect(state.pending[0].anchorUserId).toBe("5");
+  });
+
+  it("updates pending actions when a local id is resolved (anchor user id)", () => {
+    let state = requestQueue(undefined, init());
+    state = requestQueue(state, repositionUser("5", "-1", true));
+    state = requestQueue(state, updateLocalId("user", "-1", "123"));
+    expect(state.pending[0].movedUserId).toBe("5");
+    expect(state.pending[0].anchorUserId).toBe("123");
   });
 });

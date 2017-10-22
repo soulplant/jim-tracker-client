@@ -19,6 +19,7 @@ import {
   UPDATE_USER,
   INCREMENT_REQUESTS_IN_FLIGHT,
   DECREMENT_REQUESTS_IN_FLIGHT,
+  RepositionUserAction,
 } from "./actions";
 import {
   ConfirmState,
@@ -266,11 +267,29 @@ const viewReducer = combineReducers({
   confirm: confirmReducer,
 });
 
-const requestQueue = (
+export const requestQueue = (
   state: RequestQueueState = { pending: [] },
   action: TTAction
 ): RequestQueueState => {
   switch (action.type) {
+    case UPDATE_LOCAL_ID: {
+      if (action.idType !== "user") {
+        return state;
+      }
+      const idMap = (id: string) =>
+        id == action.localId ? action.remoteId : id;
+      return {
+        pending: state.pending.map(
+          (a: RepositionUserAction): RepositionUserAction => {
+            return {
+              ...a,
+              anchorUserId: idMap(a.anchorUserId),
+              movedUserId: idMap(a.movedUserId),
+            };
+          }
+        ),
+      };
+    }
     case REPOSITION_USER: {
       return {
         pending: [...state.pending, action],
