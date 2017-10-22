@@ -1,0 +1,3 @@
+[submodule "prod/ksonnet-lib"]
+	path = prod/ksonnet-lib
+	url = https://github.com/ksonnet/ksonnet-lib
