@@ -60,14 +60,16 @@ local talkTracker = {
       "kubernetes.io/tls-acme": if $.useTls then "true" else "false",
     }) +
     ingress.mixin.spec.rules([ingressRule($.host, '/', $.name, 80)]) +
-    ingress.mixin.spec.tls([
-      {
-        hosts: [$.host],
-        secretName: $.name + '-tls',
-      },
-    ]),
+    if $.useTls then
+      ingress.mixin.spec.tls([
+        {
+          hosts: [$.host],
+          secretName: $.name + '-tls',
+        },
+      ])
+    else {},
 
-  local ttService = service.new('talk-tracker', $.labels, [
+  local ttService = service.new($.name, $.labels, [
     service.mixin.spec.portsType.new(80, 1234)
   ]),
 
