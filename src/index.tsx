@@ -36,7 +36,16 @@ const store = createStore(
   composeEnhancers(applyMiddleware(sagaMiddleware))
 );
 
-const api = new ApiServiceApi(undefined, "/api");
+// Performs a fetch with cookies and basic auth headers that are stored in the
+// client.
+const fetchWithCreds = (
+  input: RequestInfo,
+  init?: RequestInit
+): Promise<Response> => {
+  return fetch(input, { ...init, credentials: "same-origin" });
+};
+
+const api = new ApiServiceApi(undefined, "/api", fetchWithCreds);
 
 sagaMiddleware.run(watchInitialLoad, api);
 sagaMiddleware.run(watchAddUser, api);
