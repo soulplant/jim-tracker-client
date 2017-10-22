@@ -24,7 +24,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
     window.addEventListener(
       "keyup",
       event => {
-        if (event.keyCode == 27) {
+        if (event.keyCode === 27) {
           this.props.escapePressed();
         }
       },
