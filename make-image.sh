@@ -1,12 +1,14 @@
 #!/bin/bash
 
+set -e
+
 PKG=pkg
 SERVER_DIR="$GOPATH/src/github.com/soulplant/talk-tracker"
 echo "building server..."
 (cd $SERVER_DIR; env GOOS=linux GOARCH=386 go build)
 
 echo "building client..."
-# yarn build
+yarn build
 
 rm -rf $PKG
 mkdir $PKG
