@@ -18,6 +18,7 @@ local volumeMount(name, path) = container.volumeMounts(container.volumeMountsTyp
 local secretVolume(name, secretName) = volumes(volume.name(name) + volume.mixin.secret.secretName(secretName));
 
 local imageName = 'asia.gcr.io/crucial-media-167709/talk-tracker:v1';
+local host = 'talks.dev.helixta.com.au';
 
 local appServer =
   container.new('talk-tracker', imageName) +
@@ -49,10 +50,20 @@ local ingressRule(host, path, serviceName, servicePort) = {
 
 local ttIngress = ingress.new() +
   ingress.mixin.metadata.name('talk-tracker') +
+  ingress.mixin.metadata.annotations({
+    "kubernetes.io/ingress.class": "nginx",
+    "kubernetes.io/tls-acme": "true",
+  }) +
   ingress.mixin.spec.rules(
     [
-      ingressRule('talks.dev.helixta.com.au', '/', 'talk-tracker', 80),
+      ingressRule(host, '/', 'talk-tracker', 80),
     ]
-  );
+  ) +
+  ingress.mixin.spec.tls([
+    {
+      hosts: [host],
+      secretName: 'talk-tracker-tls',
+    },
+  ]);
 
 k.core.v1.list.new([ttDeployment, ttIngress, ttService])
