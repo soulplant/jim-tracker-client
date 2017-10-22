@@ -46,8 +46,8 @@ class App extends React.Component<Props & DispatchProps, {}> {
           <h1 className="title">
             Helix Talk Rotation <LoadingIndicator />
           </h1>
-          {!this.props.isInitialFetchPending && <TalkScheduleTable />}
           {!this.props.isInitialFetchPending && <ButtonPanel />}
+          {!this.props.isInitialFetchPending && <TalkScheduleTable />}
         </div>
       </div>
     );
