@@ -36,11 +36,13 @@ local talkTracker = {
   host:: host,
   labels:: {app: $.name},
   useTls:: true,
+  namespace:: $.name,
 
   local appServer =
     container.new('talk-tracker', repoName + ':' + $.imageVersion) +
     container.command("/talk-tracker") +
     container.args(['-projectId', $.projectId]) +
+    container.args(['-namespace', $.namespace]) +
     container.ports(container.portsType.newNamed("http", 1234)) +
     volumeMount('google-cloud-key', '/var/secrets/google') +
     container.env(container.envType.new('GOOGLE_APPLICATION_CREDENTIALS', '/var/secrets/google/key.json')) +
