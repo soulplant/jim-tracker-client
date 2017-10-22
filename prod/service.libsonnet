@@ -38,12 +38,23 @@ local talkTracker = {
   useTls:: true,
   namespace:: $.name,
 
+  // Resource requests / limits. Memory is request+limit, but CPU is just request.
+  memory:: '50Mi',
+  cpu:: '50m',
+
   local appServer =
     container.new('talk-tracker', repoName + ':' + $.imageVersion) +
     container.command("/talk-tracker") +
     container.args(['-projectId', $.projectId]) +
     container.args(['-namespace', $.namespace]) +
     container.ports(container.portsType.newNamed("http", 1234)) +
+    container.mixin.resources.limits({
+      memory: $.memory,
+    }) +
+    container.mixin.resources.requests({
+      cpu: $.cpu,
+      memory: $.memory,
+    }) +
     volumeMount('google-cloud-key', '/var/secrets/google') +
     container.env(container.envType.new('GOOGLE_APPLICATION_CREDENTIALS', '/var/secrets/google/key.json')) +
     container.env(container.envType.new('BASIC_AUTH_USER', 'talks')) +
