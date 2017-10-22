@@ -5,13 +5,11 @@ local volume = deployment.mixin.spec.template.spec.volumesType;
 local container = deployment.mixin.spec.template.spec.containersType;
 local service = k.core.v1.service;
 
-local s = service.new('talk-tracker', {app: 'talk-tracker'}, [
+local ttService = service.new('talk-tracker', {app: 'talk-tracker'}, [
   service.mixin.spec.portsType.new(80, 1234)
 ]);
 
 local ingress = k.extensions.v1beta1.ingress;
-
-local i = ingress.new();
 
 // Adds a volume mount to a container.
 local volumeMount(name, path) = container.volumeMounts(container.volumeMountsType.new(name, path, true));
@@ -33,7 +31,7 @@ local appServer =
   container.imagePullPolicy('Always');
 
 
-local d = deployment.new('talk-tracker', 1, [appServer], {app: 'talk-tracker'}) +
+local ttDeployment = deployment.new('talk-tracker', 1, [appServer], {app: 'talk-tracker'}) +
   secretVolume('google-cloud-key', 'talk-tracker-key');
 
 local ingressRule(host, path, serviceName, servicePort) = {
@@ -49,7 +47,7 @@ local ingressRule(host, path, serviceName, servicePort) = {
   },
 };
 
-local i = ingress.new() +
+local ttIngress = ingress.new() +
   ingress.mixin.metadata.name('talk-tracker') +
   ingress.mixin.spec.rules(
     [
@@ -57,4 +55,4 @@ local i = ingress.new() +
     ]
   );
 
-k.core.v1.list.new([d, i, s])
+k.core.v1.list.new([ttDeployment, ttIngress, ttService])
