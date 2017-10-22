@@ -89,6 +89,12 @@ export interface ApiAddTalkRequest {
      * @memberof ApiAddTalkRequest
      */
     userId?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ApiAddTalkRequest
+     */
+    name?: string;
 }
 
 /**
@@ -99,10 +105,10 @@ export interface ApiAddTalkRequest {
 export interface ApiAddTalkResponse {
     /**
      * 
-     * @type {ApiTalk}
+     * @type {string}
      * @memberof ApiAddTalkResponse
      */
-    talk?: ApiTalk;
+    talkId?: string;
 }
 
 /**
@@ -127,10 +133,10 @@ export interface ApiAddUserRequest {
 export interface ApiAddUserResponse {
     /**
      * The newly added user.
-     * @type {ApiUser}
+     * @type {string}
      * @memberof ApiAddUserResponse
      */
-    user?: ApiUser;
+    userId?: string;
 }
 
 /**
@@ -199,6 +205,20 @@ export interface ApiGetUsersResponse {
      * @memberof ApiGetUsersResponse
      */
     user?: Array<ApiUser>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiListTalksResponse
+ */
+export interface ApiListTalksResponse {
+    /**
+     * 
+     * @type {Array&lt;ApiTalk&gt;}
+     * @memberof ApiListTalksResponse
+     */
+    talk?: Array<ApiTalk>;
 }
 
 /**
@@ -297,6 +317,12 @@ export interface ApiTalk {
      * @memberof ApiTalk
      */
     url?: Array<string>;
+    /**
+     * Timestamp for when this task was completed in seconds from the epoch.
+     * @type {string}
+     * @memberof ApiTalk
+     */
+    completedSeconds?: string;
 }
 
 /**
@@ -319,10 +345,22 @@ export interface ApiUpdateUserRequest {
     name?: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof ApiUpdateUserRequest
+     */
+    hasName?: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof ApiUpdateUserRequest
      */
     nextTalk?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ApiUpdateUserRequest
+     */
+    hasNextTalk?: boolean;
 }
 
 /**
@@ -485,6 +523,28 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
          */
         getUsers(options: any = {}): FetchArgs {
             const path = `/v1/user`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTalks(options: any = {}): FetchArgs {
+            const path = `/v1/talk`;
             const urlObj = url.parse(path, true);
             const requestOptions = Object.assign({ method: 'GET' }, options);
             const headerParameter = {} as any;
@@ -694,6 +754,23 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTalks(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiListTalksResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).listTalks(options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -802,6 +879,14 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listTalks(options?: any) {
+            return ApiServiceApiFp(configuration).listTalks(options)(fetch, basePath);
+        },
+        /**
+         * 
          * @param {string} userId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -890,6 +975,16 @@ export class ApiServiceApi extends BaseAPI {
      */
     public getUsers(options?: any) {
         return ApiServiceApiFp(this.configuration).getUsers(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public listTalks(options?: any) {
+        return ApiServiceApiFp(this.configuration).listTalks(options)(this.fetch, this.basePath);
     }
 
     /**
