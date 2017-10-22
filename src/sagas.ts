@@ -67,7 +67,7 @@ function* handleAddUser(api: ApiServiceApi, action: AddUserAction) {
   const resp = (yield call([api, api.addUser], {
     name: action.userName,
   })) as ApiAddUserResponse;
-  yield put(updateLocalId("user", action.localId, resp.user!.id!));
+  yield put(updateLocalId("user", action.localId, resp.userId!));
 }
 
 export function* watchRepositions(api: ApiServiceApi) {
@@ -114,6 +114,12 @@ export function* watchUserChanges(api: ApiServiceApi) {
 
 function* updateUserChange(api: ApiServiceApi, action: UpdateUserAction) {
   const req: ApiUpdateUserRequest = { ...action.updates };
+  if (req.name !== undefined) {
+    req.hasName = true;
+  }
+  if (req.nextTalk !== undefined) {
+    req.hasNextTalk = true;
+  }
   yield call([api, api.updateUser], action.userId, req);
 }
 
