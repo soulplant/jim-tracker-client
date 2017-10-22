@@ -92,7 +92,6 @@ export function* attemptReposition(api: ApiServiceApi): IterableIterator<{}> {
   const req: ApiReorderRequest = {
     anchorUserId: reposition.anchorUserId,
     before: reposition.before,
-    // TODO(james): Rename the action field to 'moveUserId'.
     moveUserId: reposition.movedUserId,
     version,
   };
