@@ -19,7 +19,7 @@ import {
   repositionUser,
   updateUser,
 } from "../actions";
-import { getIsEditMode, getUserById } from "../selectors";
+import { getIsEditMode, getUserById, getIsUserLoading } from "../selectors";
 
 import EditableText from "../components/EditableText";
 import { compose } from "redux";
@@ -28,7 +28,15 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 
 interface Props {
   user: User;
+
   isEditMode: boolean;
+
+  // Whether or not this user is being confirmed on the server right now.
+  // TODO(james): We only need this to prevent interactions so that when we
+  // update the local id in the client we don't lose our intermediate state. We
+  // should figure out a way of handling local ids that doesn't cause react to
+  // unmount / remount us.
+  isLoading: boolean;
 }
 
 interface DispatchProps {
@@ -175,6 +183,7 @@ class UserRow extends React.Component<
             <EditableText
               value={this.props.user.name}
               placeholder="(unknown)"
+              disabled={this.props.isLoading}
               setValue={value =>
                 this.props.updateUser(this.props.userId, { name: value })}
             />
@@ -183,6 +192,7 @@ class UserRow extends React.Component<
             <EditableText
               value={this.props.user.nextTalk}
               placeholder="(untitled)"
+              disabled={this.props.isLoading}
               setValue={value =>
                 this.props.updateUser(this.props.userId, { nextTalk: value })}
             />
@@ -209,6 +219,7 @@ class UserRow extends React.Component<
 const mapStateToProps = (state: TTState, ownProps: OwnProps): Props => ({
   user: getUserById(state, ownProps.userId),
   isEditMode: getIsEditMode(state),
+  isLoading: getIsUserLoading(state, ownProps.userId),
 });
 
 const mapDispatchToProps = {

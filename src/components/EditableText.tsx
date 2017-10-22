@@ -1,9 +1,19 @@
 import * as React from "react";
+import { StyleSheet, css } from "aphrodite";
+
+const styles = StyleSheet.create({
+  disabled: {
+    opacity: 0.5,
+  },
+});
 
 interface OwnProps {
   value: string;
   // What to display when value is empty.
   placeholder?: string;
+
+  // If true, prevent users from editing this field.
+  disabled?: boolean;
   setValue(value: string): void;
 }
 
@@ -26,6 +36,9 @@ export default class EditableText extends React.Component<OwnProps, State> {
   }
 
   startEditing = () => {
+    if (this.props.disabled) {
+      return;
+    }
     this.setState({ isEditing: true, currentValue: this.props.value });
     setTimeout(() => {
       if (!this.input) {
@@ -59,7 +72,6 @@ export default class EditableText extends React.Component<OwnProps, State> {
       event.stopPropagation();
       this.cancelEditing();
       event.preventDefault();
-      // console.log("from input", event);
     }
   };
 
@@ -76,7 +88,10 @@ export default class EditableText extends React.Component<OwnProps, State> {
         onKeyUp={this.handleKeyUp}
       />
     ) : (
-      <span onClick={this.startEditing}>
+      <span
+        onClick={this.startEditing}
+        className={css(this.props.disabled && styles.disabled)}
+      >
         {this.props.value || this.props.placeholder}
       </span>
     );

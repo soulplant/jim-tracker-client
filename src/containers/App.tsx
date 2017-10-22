@@ -3,16 +3,21 @@ import * as React from "react";
 import ButtonPanel from "./ButtonPanel";
 import ConfirmationDialog from "./ConfirmationDialog";
 import CustomDragLayer from "../components/CustomDragLayer";
+import LoadingIndicator from "./LoadingIndicator";
 import { DragDropContext } from "react-dnd";
 import HTML5Backend from "react-dnd-html5-backend";
 import { TTState } from "../types";
 import TalkScheduleTable from "./TalkScheduleTable";
 import { connect } from "react-redux";
 import { escapePressed } from "../actions";
-import { getIsPendingConfirmation } from "../selectors";
+import {
+  getIsPendingConfirmation,
+  getIsInitialFetchPending,
+} from "../selectors";
 
 interface Props {
   isPendingConfirmation: boolean;
+  isInitialFetchPending: boolean;
 }
 
 interface DispatchProps {
@@ -38,9 +43,11 @@ class App extends React.Component<Props & DispatchProps, {}> {
         <CustomDragLayer />
         {this.props.isPendingConfirmation && <ConfirmationDialog />}
         <div className="kontainer">
-          <h1 className="title">Helix Talk Rotation</h1>
-          <TalkScheduleTable />
-          <ButtonPanel />
+          <h1 className="title">
+            Helix Talk Rotation <LoadingIndicator />
+          </h1>
+          {!this.props.isInitialFetchPending && <TalkScheduleTable />}
+          {!this.props.isInitialFetchPending && <ButtonPanel />}
         </div>
       </div>
     );
@@ -49,6 +56,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
 
 const mapStateToProps = (state: TTState): Props => ({
   isPendingConfirmation: getIsPendingConfirmation(state),
+  isInitialFetchPending: getIsInitialFetchPending(state),
 });
 
 const mapDispatchToProps: DispatchProps = {

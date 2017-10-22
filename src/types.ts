@@ -45,9 +45,16 @@ export interface ConfirmState {
 }
 
 export interface ViewState {
+  // True while the initial fetch is happening.
   loading: boolean;
+
+  // How many requests are in flight.
+  requestsInFlight: number;
+
   // True when the user is in edit mode.
   editMode: boolean;
+
+  // Defined when there is a confirmation popup visible on the screen.
   confirm: ConfirmState | null;
 }
 

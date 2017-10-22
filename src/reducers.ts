@@ -17,6 +17,8 @@ import {
   TTAction,
   UPDATE_LOCAL_ID,
   UPDATE_USER,
+  INCREMENT_REQUESTS_IN_FLIGHT,
+  DECREMENT_REQUESTS_IN_FLIGHT,
 } from "./actions";
 import {
   ConfirmState,
@@ -241,8 +243,25 @@ const editModeReducer = (state: boolean = false, action: TTAction): boolean => {
   }
 };
 
+const requestsInFlightReducer = (
+  state: number = 0,
+  action: TTAction
+): number => {
+  switch (action.type) {
+    case INCREMENT_REQUESTS_IN_FLIGHT: {
+      return state + 1;
+    }
+    case DECREMENT_REQUESTS_IN_FLIGHT: {
+      return state - 1;
+    }
+    default:
+      return state;
+  }
+};
+
 const viewReducer = combineReducers({
   loading: loadingReducer,
+  requestsInFlight: requestsInFlightReducer,
   editMode: editModeReducer,
   confirm: confirmReducer,
 });

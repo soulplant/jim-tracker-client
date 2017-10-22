@@ -21,6 +21,8 @@ export type TTAction =
   | EndEditModeAction
   | RemoveUserFromRotationAction
   | EscapePressedAction
+  | IncrementRequestsInFlightAction
+  | DecrementRequestsInFlightAction
   | UpdateLocalIdAction;
 
 export interface InitialLoadData {
@@ -50,6 +52,8 @@ export const START_EDIT_MODE = "START_EDIT_MODE";
 export const END_EDIT_MODE = "END_EDIT_MODE";
 export const REMOVE_USER_FROM_ROTATION = "REMOVE_USER_FROM_ROTATION";
 export const ESCAPE_PRESSED = "ESCAPE_PRESSED";
+export const INCREMENT_REQUESTS_IN_FLIGHT = "INCREMENT_REQUESTS_IN_FLIGHT";
+export const DECREMENT_REQUESTS_IN_FLIGHT = "DECREMENT_REQUESTS_IN_FLIGHT";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -150,6 +154,14 @@ export interface RemoveUserFromRotationAction extends Action {
 
 export interface EscapePressedAction extends Action {
   type: typeof ESCAPE_PRESSED;
+}
+
+export interface IncrementRequestsInFlightAction extends Action {
+  type: typeof INCREMENT_REQUESTS_IN_FLIGHT;
+}
+
+export interface DecrementRequestsInFlightAction extends Action {
+  type: typeof DECREMENT_REQUESTS_IN_FLIGHT;
 }
 
 export const init = (): InitAction => ({
@@ -282,4 +294,12 @@ export const removeUserFromRotation = (
 
 export const escapePressed = (): EscapePressedAction => ({
   type: ESCAPE_PRESSED,
+});
+
+export const incrementRequestsInFlight = (): IncrementRequestsInFlightAction => ({
+  type: INCREMENT_REQUESTS_IN_FLIGHT,
+});
+
+export const decrementRequestsInFlight = (): DecrementRequestsInFlightAction => ({
+  type: DECREMENT_REQUESTS_IN_FLIGHT,
 });

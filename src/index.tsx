@@ -19,7 +19,11 @@ import { ApiServiceApi } from "./backend/api";
 import App from "./containers/App";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
-import { initialLoadStart } from "./actions";
+import {
+  initialLoadStart,
+  incrementRequestsInFlight,
+  decrementRequestsInFlight,
+} from "./actions";
 import { reducer } from "./reducers";
 
 declare var window: Window & {
@@ -38,11 +42,19 @@ const store = createStore(
 
 // Performs a fetch with cookies and basic auth headers that are stored in the
 // client.
-const fetchWithCreds = (
+const fetchWithCreds = async (
   input: RequestInfo,
   init?: RequestInit
 ): Promise<Response> => {
-  return fetch(input, { ...init, credentials: "same-origin" });
+  store.dispatch(incrementRequestsInFlight());
+  try {
+    return await fetch(input, {
+      ...init,
+      credentials: "same-origin",
+    });
+  } finally {
+    store.dispatch(decrementRequestsInFlight());
+  }
 };
 
 const api = new ApiServiceApi(undefined, "/api", fetchWithCreds);

@@ -56,6 +56,25 @@ export const getAnyLocalIds = (state: TTState): boolean => {
   return ids.findIndex(id => id.startsWith("-")) !== -1;
 };
 
+// Returns true if we are waiting on the server for anything right now.
+export const getIsLoading = (state: TTState): boolean => {
+  return (
+    getAnyLocalIds(state) ||
+    state.view.loading ||
+    state.view.requestsInFlight > 0
+  );
+};
+
+// Returns true if the given user is not currently saved on the server.
+export const getIsUserLoading = (state: TTState, userId: string): boolean => {
+  return getUserById(state, userId).id.startsWith("-");
+};
+
+// Returns true if the initial fetch is pending.
+export const getIsInitialFetchPending = (state: TTState): boolean => {
+  return state.view.loading;
+};
+
 // Get the next reposition request that is to be completed.
 export const getNextPendingReposition = (
   state: TTState
