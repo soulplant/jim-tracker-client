@@ -277,7 +277,7 @@ export const requestQueue = (
         return state;
       }
       const idMap = (id: string) =>
-        id == action.localId ? action.remoteId : id;
+        id === action.localId ? action.remoteId : id;
       return {
         pending: state.pending.map(
           (a: RepositionUserAction): RepositionUserAction => {
