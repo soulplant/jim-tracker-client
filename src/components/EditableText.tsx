@@ -86,6 +86,7 @@ export default class EditableText extends React.Component<OwnProps, State> {
         onChange={this.handleChange}
         onKeyPress={this.handleKeyPress}
         onKeyUp={this.handleKeyUp}
+        onBlur={this.finishEditing}
       />
     ) : (
       <span
