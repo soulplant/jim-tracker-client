@@ -5,15 +5,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { applyMiddleware, compose, createStore } from "redux";
-import {
-  watchAddUser,
-  watchConfirmedActions,
-  watchInitialLoad,
-  watchRepositions,
-  watchTalkCompletions,
-  watchUserChanges,
-  watchUserRemovals,
-} from "./sagas";
+import { watchInitialLoad } from "./sagas";
 
 import { ApiServiceApi } from "./backend/api";
 import App from "./containers/App";
@@ -60,12 +52,6 @@ const fetchWithCreds = async (
 const api = new ApiServiceApi(undefined, "/api", fetchWithCreds);
 
 sagaMiddleware.run(watchInitialLoad, api);
-sagaMiddleware.run(watchAddUser, api);
-sagaMiddleware.run(watchUserChanges, api);
-sagaMiddleware.run(watchRepositions, api);
-sagaMiddleware.run(watchConfirmedActions);
-sagaMiddleware.run(watchUserRemovals, api);
-sagaMiddleware.run(watchTalkCompletions, api);
 
 store.dispatch(initialLoadStart());
 

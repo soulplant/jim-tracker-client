@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 
 TMP_DIR="$PWD/gen_tmp"
 OUT_DIR="$PWD/src/backend"
-API_DIR="$GOPATH/src/github.com/soulplant/talk-tracker/api"
+API_DIR="$GOPATH/src/github.com/soulplant/jim-tracker/api"
 
 rm -rf $TMP_DIR
 rm -rf $OUT_DIR

@@ -1,68 +1,34 @@
 import * as React from "react";
 
-import ButtonPanel from "./ButtonPanel";
-import ConfirmationDialog from "./ConfirmationDialog";
-import CustomDragLayer from "../components/CustomDragLayer";
-import LoadingIndicator from "./LoadingIndicator";
-import { DragDropContext } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
-import { TTState } from "../types";
-import TalkScheduleTable from "./TalkScheduleTable";
+import { JTState } from "../types";
 import { connect } from "react-redux";
-import { escapePressed } from "../actions";
-import {
-  getIsPendingConfirmation,
-  getIsInitialFetchPending,
-} from "../selectors";
+import DeliveryForm from "../components/DeliveryForm";
+import { getIsLoading } from "../selectors";
 
 interface Props {
-  isPendingConfirmation: boolean;
-  isInitialFetchPending: boolean;
+  isLoading: boolean;
 }
 
-interface DispatchProps {
-  escapePressed: typeof escapePressed;
-}
+interface DispatchProps {}
 
 class App extends React.Component<Props & DispatchProps, {}> {
-  componentDidMount() {
-    window.addEventListener(
-      "keyup",
-      event => {
-        if (event.keyCode === 27) {
-          this.props.escapePressed();
-        }
-      },
-      false
-    );
-  }
-
   render(): false | JSX.Element | null {
     return (
       <div className="cc">
-        <CustomDragLayer />
-        {this.props.isPendingConfirmation && <ConfirmationDialog />}
-        <div className="kontainer">
-          <h1 className="title">
-            Helix Talk Rotation <LoadingIndicator />
-          </h1>
-          {!this.props.isInitialFetchPending && <ButtonPanel />}
-          {!this.props.isInitialFetchPending && <TalkScheduleTable />}
-        </div>
+        <h1>Hello {this.props.isLoading ? "..." : ""}</h1>
+        <DeliveryForm date={new Date()} deliveryTime={new Date()} />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: TTState): Props => ({
-  isPendingConfirmation: getIsPendingConfirmation(state),
-  isInitialFetchPending: getIsInitialFetchPending(state),
+const mapStateToProps = (state: JTState): Props => ({
+  isLoading: getIsLoading(state),
 });
 
-const mapDispatchToProps: DispatchProps = {
-  escapePressed,
-};
+const mapDispatchToProps: DispatchProps = {};
 
-export default DragDropContext(HTML5Backend)(
-  connect<Props, DispatchProps>(mapStateToProps, mapDispatchToProps)(App)
-);
+export default connect<Props, DispatchProps>(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
