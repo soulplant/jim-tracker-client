@@ -1,4 +1,5 @@
 import { Action } from "redux";
+import { LocalTime } from "./types";
 
 export type JTAction =
   | InitAction
@@ -8,12 +9,14 @@ export type JTAction =
   | DecrementRequestsInFlightAction
   | PreviousDateAction
   | NextDateAction
+  | GoToTodayAction
   | RecordDeliveryAction;
 
+// TODO(james): Move this to types.ts
 export type Delivery = {
   date: string;
   // Time is a string-encoded int64.
-  time: string;
+  time: LocalTime;
 };
 
 export interface InitialLoadData {
@@ -27,6 +30,7 @@ export const INCREMENT_REQUESTS_IN_FLIGHT = "INCREMENT_REQUESTS_IN_FLIGHT";
 export const DECREMENT_REQUESTS_IN_FLIGHT = "DECREMENT_REQUESTS_IN_FLIGHT";
 export const PREVIOUS_DATE = "PREVIOUS_DATE";
 export const NEXT_DATE = "NEXT_DATE";
+export const GO_TO_TODAY = "GO_TO_TODAY";
 export const RECORD_DELIVERY = "RECORD_DELIVERY";
 
 export interface InitAction extends Action {
@@ -56,6 +60,11 @@ export interface PreviousDateAction extends Action {
 
 export interface NextDateAction extends Action {
   type: typeof NEXT_DATE;
+}
+
+export interface GoToTodayAction extends Action {
+  type: typeof GO_TO_TODAY;
+  today: Date;
 }
 
 export interface RecordDeliveryAction extends Action {
@@ -94,7 +103,12 @@ export const nextDate = (): NextDateAction => ({
   type: NEXT_DATE,
 });
 
-export const recordDelivery = (time: Date): RecordDeliveryAction => ({
+export const goToToday = (): GoToTodayAction => ({
+  type: GO_TO_TODAY,
+  today: new Date(),
+});
+
+export const recordDelivery = (): RecordDeliveryAction => ({
   type: RECORD_DELIVERY,
-  time,
+  time: new Date(),
 });

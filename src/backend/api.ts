@@ -90,11 +90,11 @@ export interface ApiDelivery {
      */
     date?: string;
     /**
-     * The timestamp of the delivery.
-     * @type {string}
+     * When the delivery took place.
+     * @type {ApiLocalTime}
      * @memberof ApiDelivery
      */
-    time?: string;
+    time?: ApiLocalTime;
 }
 
 /**
@@ -109,6 +109,46 @@ export interface ApiFetchAllResponse {
      * @memberof ApiFetchAllResponse
      */
     delivery?: Array<ApiDelivery>;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiLocalTime
+ */
+export interface ApiLocalTime {
+    /**
+     * 
+     * @type {number}
+     * @memberof ApiLocalTime
+     */
+    hour?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ApiLocalTime
+     */
+    minute?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ApiLocalTime
+     */
+    second?: number;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiRecordDeliveryRequest
+ */
+export interface ApiRecordDeliveryRequest {
+    /**
+     * 
+     * @type {ApiDelivery}
+     * @memberof ApiRecordDeliveryRequest
+     */
+    delivery?: ApiDelivery;
 }
 
 /**
@@ -150,25 +190,28 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
         },
         /**
          * 
-         * @param {string} [date] 
+         * @param {ApiRecordDeliveryRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recordDelivery(date?: string, options: any = {}): FetchArgs {
+        recordDelivery(body: ApiRecordDeliveryRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling recordDelivery.');
+            }
             const path = `/v1/record`;
             const urlObj = url.parse(path, true);
-            const requestOptions = Object.assign({ method: 'GET' }, options);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
             const headerParameter = {} as any;
             const queryParameter = {} as any;
 
-            if (date !== undefined) {
-                queryParameter['date'] = date;
-            }
+            headerParameter['Content-Type'] = 'application/json';
 
             urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete urlObj.search;
             requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
 
             return {
                 url: url.format(urlObj),
@@ -203,12 +246,12 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [date] 
+         * @param {ApiRecordDeliveryRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recordDelivery(date?: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiRecordDeliveryResponse> {
-            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).recordDelivery(date, options);
+        recordDelivery(body: ApiRecordDeliveryRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiRecordDeliveryResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).recordDelivery(body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -238,12 +281,12 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
         },
         /**
          * 
-         * @param {string} [date] 
+         * @param {ApiRecordDeliveryRequest} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        recordDelivery(date?: string, options?: any) {
-            return ApiServiceApiFp(configuration).recordDelivery(date, options)(fetch, basePath);
+        recordDelivery(body: ApiRecordDeliveryRequest, options?: any) {
+            return ApiServiceApiFp(configuration).recordDelivery(body, options)(fetch, basePath);
         },
     };
 };
@@ -267,13 +310,13 @@ export class ApiServiceApi extends BaseAPI {
 
     /**
      * 
-     * @param {} [date] 
+     * @param {} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ApiServiceApi
      */
-    public recordDelivery(date?: string, options?: any) {
-        return ApiServiceApiFp(this.configuration).recordDelivery(date, options)(this.fetch, this.basePath);
+    public recordDelivery(body: ApiRecordDeliveryRequest, options?: any) {
+        return ApiServiceApiFp(this.configuration).recordDelivery(body, options)(this.fetch, this.basePath);
     }
 
 }
