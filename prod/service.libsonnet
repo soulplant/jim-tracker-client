@@ -26,13 +26,13 @@ local volumeMount(name, path) = container.volumeMounts(container.volumeMountsTyp
 // Adds a secret volume to a deployment.
 local secretVolume(name, secretName) = volumes(volume.name(name) + volume.mixin.secret.secretName(secretName));
 
-local repoName = 'asia.gcr.io/crucial-media-167709/talk-tracker';
+local repoName = 'asia.gcr.io/helix-sydney/talk-tracker';
 local host = 'talks.dev.helixta.com.au';
 
 local talkTracker = {
   name:: 'talk-tracker',
   imageVersion:: 'v1',
-  projectId:: 'crucial-media-167709',
+  projectId:: 'helix-sydney',
   host:: host,
   labels:: {app: $.name},
   useTls:: true,

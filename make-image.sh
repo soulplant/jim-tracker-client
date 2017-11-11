@@ -20,7 +20,7 @@ cp $SERVER_DIR/talk-tracker $PKG
 docker build $PKG -t talk-tracker
 
 # TODO(james): Make the label configurable.
-docker tag talk-tracker asia.gcr.io/crucial-media-167709/talk-tracker:v1
+docker tag talk-tracker asia.gcr.io/helix-sydney/talk-tracker:v1
 
 echo "pushing v1 to gcr..."
-gcloud docker -- push asia.gcr.io/crucial-media-167709/talk-tracker:v1
+gcloud docker -- push asia.gcr.io/helix-sydney/talk-tracker:v1

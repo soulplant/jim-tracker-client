@@ -1,3 +1,3 @@
 local talkTracker = import "./service.libsonnet";
 
-talkTracker.result
+(talkTracker + {useTls: true}).result
