@@ -1,18 +1,15 @@
+import * as moment from "moment";
+import { LocalTime } from "./types";
+
 // Formats the given date in YYYYMMDD.
 export const formatDate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  return moment(date).format("YYYYMMDD");
+};
 
-  const pad = (n: number): string => {
-    if (n == 0) {
-      return "00";
-    }
-    if (n < 10) {
-      return "0" + n;
-    }
-    return "" + n;
-  };
-
-  return year + pad(month) + pad(day);
+export const formatTime = (date: Date, time: LocalTime): string => {
+  return moment(date)
+    .set("h", time.hour)
+    .set("m", time.minute)
+    .set("s", time.second)
+    .format("h:mm A");
 };

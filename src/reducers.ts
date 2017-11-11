@@ -8,6 +8,7 @@ import {
   INITIAL_LOAD_SUCCESS,
   RECORD_DELIVERY,
   GO_TO_TODAY,
+  INITIAL_LOAD_START,
 } from "./actions";
 
 import { combineReducers } from "redux";
@@ -27,6 +28,20 @@ import { formatDate } from "./utils";
 // function getIds<T extends { id: string }>(ts: T[]): string[] {
 //   return ts.map(t => t.id);
 // }
+
+const isInitialLoadPendingReducer = (
+  state: boolean = false,
+  action: JTAction
+): boolean => {
+  switch (action.type) {
+    case INITIAL_LOAD_START:
+      return true;
+    case INITIAL_LOAD_SUCCESS:
+      return false;
+    default:
+      return state;
+  }
+};
 
 const requestsInFlightReducer = (
   state: number = 0,
@@ -90,6 +105,7 @@ const dateReducer = (state: Date = new Date(), action: JTAction): Date => {
 };
 
 export const reducer = combineReducers<JTState>({
+  isInitialLoadPending: isInitialLoadPendingReducer,
   deliveries: deliveriesReducer,
   date: dateReducer,
   requestsInFlight: requestsInFlightReducer,

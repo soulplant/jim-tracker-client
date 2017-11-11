@@ -17,3 +17,17 @@ export const getTime = (state: JTState): LocalTime | null => {
   }
   return date.time;
 };
+
+export const getIsToday = (state: JTState): boolean => {
+  return formatDate(getDate(state)) == formatDate(getToday(state));
+};
+
+export const getToday = (state: JTState): Date => {
+  // TODO(james): Store the current date in the store and periodically update
+  // it.
+  return new Date();
+};
+
+export const getIsInitialLoadPending = (state: JTState): boolean => {
+  return state.isInitialLoadPending;
+};

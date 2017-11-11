@@ -8,16 +8,6 @@ table {
   width: 100%;
 }
 
-.cc {
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  width: 500px;
-  flex-direction: column;
-  align-content: center;
-  /* justify-content: center; */
-}
-
 .kontainer {
   display: flex;
   width: 40em;

@@ -9,6 +9,7 @@ export type LocalTime = {
 };
 
 export type JTState = {
+  isInitialLoadPending: boolean;
   deliveries: { [date: string]: Delivery | null };
   date: Date;
   requestsInFlight: number;

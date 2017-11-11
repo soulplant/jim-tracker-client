@@ -108,7 +108,9 @@ export const goToToday = (): GoToTodayAction => ({
   today: new Date(),
 });
 
-export const recordDelivery = (): RecordDeliveryAction => ({
+export const recordDelivery = (
+  date: Date = new Date()
+): RecordDeliveryAction => ({
   type: RECORD_DELIVERY,
-  time: new Date(),
+  time: date,
 });

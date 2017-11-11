@@ -2,14 +2,35 @@ import * as React from "react";
 
 import { JTState, LocalTime } from "../types";
 import { connect } from "react-redux";
-import DeliveryForm from "../components/DeliveryForm";
-import { getIsLoading, getDate, getTime } from "../selectors";
+import {
+  getIsLoading,
+  getDate,
+  getTime,
+  getIsToday,
+  getIsInitialLoadPending,
+} from "../selectors";
 import { previousDate, nextDate, recordDelivery, goToToday } from "../actions";
+import { formatTime } from "../utils";
+import { StyleSheet, css } from "aphrodite";
+import * as moment from "moment";
+import DeliverySetter from "../components/DeliverySetter";
+
+const styles = StyleSheet.create({
+  container: {
+    marginLeft: "auto",
+    marginRight: "auto",
+    display: "flex",
+    width: "300px",
+    flexDirection: "column",
+  },
+});
 
 interface Props {
   isLoading: boolean;
   date: Date;
   time: LocalTime | null;
+  isToday: boolean;
+  isInitialLoadPending: boolean;
 }
 
 interface DispatchProps {
@@ -21,17 +42,66 @@ interface DispatchProps {
 
 class App extends React.Component<Props & DispatchProps, {}> {
   render(): false | JSX.Element | null {
+    if (this.props.isInitialLoadPending) {
+      return null;
+    }
     return (
-      <div className="cc">
-        <h1>Hello {this.props.isLoading ? "..." : ""}</h1>
-        <DeliveryForm
-          date={this.props.date}
-          time={this.props.time}
-          onPrevious={this.props.previousDate}
-          onNext={this.props.nextDate}
-          onGoToToday={this.props.goToToday}
-        />
-        <button onClick={this.props.recordDelivery}>Record Delivery</button>
+      <div className="content">
+        <h1 style={{ textAlign: "center" }}>Jim Tracker</h1>
+        <div className={css(styles.container)}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: "2em 0",
+            }}
+          >
+            <h1 style={{ height: "20px" }}>
+              {this.props.time
+                ? formatTime(this.props.date, this.props.time)
+                : "No Delivery"}
+            </h1>
+            <div>{moment(this.props.date).format("ddd Do MMM")}</div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+            }}
+          >
+            <button className="button" onClick={this.props.previousDate}>
+              &lt;
+            </button>
+            <button
+              className="button"
+              style={{ flexGrow: 1 }}
+              onClick={this.props.goToToday}
+              disabled={this.props.isToday}
+            >
+              Go to Today
+            </button>
+            <button
+              className="button"
+              onClick={this.props.nextDate}
+              disabled={this.props.isToday}
+            >
+              &gt;
+            </button>
+          </div>
+          <button
+            className="button"
+            onClick={() => this.props.recordDelivery()}
+            disabled={!this.props.isToday || this.props.isLoading}
+          >
+            Record Delivery
+          </button>
+          <DeliverySetter
+            date={this.props.date}
+            onDeliverySet={(date: Date) => this.props.recordDelivery(date)}
+          />
+        </div>
       </div>
     );
   }
@@ -41,6 +111,8 @@ const mapStateToProps = (state: JTState): Props => ({
   isLoading: getIsLoading(state),
   date: getDate(state),
   time: getTime(state),
+  isToday: getIsToday(state),
+  isInitialLoadPending: getIsInitialLoadPending(state),
 });
 
 const mapDispatchToProps: DispatchProps = {
