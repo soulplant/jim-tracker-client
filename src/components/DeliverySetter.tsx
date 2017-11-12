@@ -21,10 +21,13 @@ class DeliverySetter extends React.Component<Props, {}> {
           }
           const date = moment(d);
           const currentDate = moment(this.props.date);
+          // This is subtle. We need to specify month before date because if we
+          // set the date to be something out of range for that month then it
+          // will get normalised which gives undesired results.
           [
-            "date",
-            "month",
             "year",
+            "month",
+            "date",
           ].forEach((unit: "date" | "month" | "year") => {
             date.set(unit, currentDate.get(unit));
           });
