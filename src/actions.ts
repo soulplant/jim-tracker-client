@@ -10,7 +10,8 @@ export type JTAction =
   | PreviousDateAction
   | NextDateAction
   | GoToTodayAction
-  | RecordDeliveryAction;
+  | RecordDeliveryAction
+  | ClearDeliveryAction;
 
 // TODO(james): Move this to types.ts
 export type Delivery = {
@@ -32,6 +33,7 @@ export const PREVIOUS_DATE = "PREVIOUS_DATE";
 export const NEXT_DATE = "NEXT_DATE";
 export const GO_TO_TODAY = "GO_TO_TODAY";
 export const RECORD_DELIVERY = "RECORD_DELIVERY";
+export const CLEAR_DELIVERY = "CLEAR_DELIVERY";
 
 export interface InitAction extends Action {
   type: "@@INIT";
@@ -72,6 +74,11 @@ export interface RecordDeliveryAction extends Action {
   time: Date;
 }
 
+export interface ClearDeliveryAction extends Action {
+  type: typeof CLEAR_DELIVERY;
+  date: Date;
+}
+
 export const init = (): InitAction => ({
   type: INIT,
 });
@@ -109,8 +116,13 @@ export const goToToday = (): GoToTodayAction => ({
 });
 
 export const recordDelivery = (
-  date: Date = new Date()
+  time: Date = new Date()
 ): RecordDeliveryAction => ({
   type: RECORD_DELIVERY,
-  time: date,
+  time,
+});
+
+export const clearDelivery = (date: Date): ClearDeliveryAction => ({
+  type: CLEAR_DELIVERY,
+  date,
 });

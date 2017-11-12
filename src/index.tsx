@@ -5,7 +5,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { applyMiddleware, compose, createStore } from "redux";
-import { watchInitialLoad, watchRecordDelivery } from "./sagas";
+import {
+  watchInitialLoad,
+  watchRecordDelivery,
+  watchClearDelivery,
+} from "./sagas";
 
 import { ApiServiceApi } from "./backend/api";
 import App from "./containers/App";
@@ -53,6 +57,7 @@ const api = new ApiServiceApi(undefined, "/api", fetchWithCreds);
 
 sagaMiddleware.run(watchInitialLoad, api);
 sagaMiddleware.run(watchRecordDelivery, api);
+sagaMiddleware.run(watchClearDelivery, api);
 
 store.dispatch(initialLoadStart());
 

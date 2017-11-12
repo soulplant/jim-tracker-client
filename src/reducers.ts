@@ -9,6 +9,7 @@ import {
   RECORD_DELIVERY,
   GO_TO_TODAY,
   INITIAL_LOAD_START,
+  CLEAR_DELIVERY,
 } from "./actions";
 
 import { combineReducers } from "redux";
@@ -72,17 +73,28 @@ const deliveriesReducer = (
     case RECORD_DELIVERY: {
       // TODO(james): Keep this in an optimistic store.
       const date = formatDate(action.time);
-      state[date] = {
-        date,
-        time: {
-          hour: action.time.getHours(),
-          minute: action.time.getMinutes(),
-          second: action.time.getSeconds(),
+      const newState = {
+        ...state,
+        [date]: {
+          date,
+          time: {
+            hour: action.time.getHours(),
+            minute: action.time.getMinutes(),
+            second: action.time.getSeconds(),
+          },
         },
       };
+      return newState;
     }
+    case CLEAR_DELIVERY: {
+      // TODO(james): Keep this in an optimistic store.
+      const date = formatDate(action.date);
+      const { [date]: deleted, ...newState } = state;
+      return newState;
+    }
+    default:
+      return state;
   }
-  return state;
 };
 
 const changeDate = (date: Date, deltaDays: number): Date => {

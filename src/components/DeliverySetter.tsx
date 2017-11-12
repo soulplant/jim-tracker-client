@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as moment from "moment";
+import { parseDate } from "../utils";
 
 type Props = {
   date: Date;
@@ -14,15 +15,17 @@ class DeliverySetter extends React.Component<Props, {}> {
       <form
         onSubmit={e => {
           e.preventDefault();
-          const dateText = this.input!.value;
-          const date = moment(dateText + "pm", "hhmmA");
+          const d = parseDate(this.input!.value);
+          if (d == null) {
+            return;
+          }
+          const date = moment(d);
           const currentDate = moment(this.props.date);
           [
             "date",
             "month",
             "year",
           ].forEach((unit: "date" | "month" | "year") => {
-            console.log("currentDate " + unit + " = " + currentDate.get(unit));
             date.set(unit, currentDate.get(unit));
           });
           this.props.onDeliverySet(date.toDate());
@@ -33,7 +36,6 @@ class DeliverySetter extends React.Component<Props, {}> {
           ref={elem => (this.input = elem)}
           className="input"
           type="text"
-          onSubmit={() => console.log("hi")}
         />
       </form>
     );

@@ -9,7 +9,13 @@ import {
   getIsToday,
   getIsInitialLoadPending,
 } from "../selectors";
-import { previousDate, nextDate, recordDelivery, goToToday } from "../actions";
+import {
+  previousDate,
+  nextDate,
+  recordDelivery,
+  goToToday,
+  clearDelivery,
+} from "../actions";
 import { formatTime } from "../utils";
 import { StyleSheet, css } from "aphrodite";
 import * as moment from "moment";
@@ -38,6 +44,7 @@ interface DispatchProps {
   nextDate: typeof nextDate;
   recordDelivery: typeof recordDelivery;
   goToToday: typeof goToToday;
+  clearDelivery: typeof clearDelivery;
 }
 
 class App extends React.Component<Props & DispatchProps, {}> {
@@ -47,7 +54,14 @@ class App extends React.Component<Props & DispatchProps, {}> {
     }
     return (
       <div className="content">
-        <h1 style={{ textAlign: "center" }}>Jim Tracker</h1>
+        <h3
+          style={{
+            textAlign: "center",
+            padding: "1em 0 0",
+          }}
+        >
+          Jim Tracker
+        </h3>
         <div className={css(styles.container)}>
           <div
             style={{
@@ -95,12 +109,19 @@ class App extends React.Component<Props & DispatchProps, {}> {
             onClick={() => this.props.recordDelivery()}
             disabled={!this.props.isToday || this.props.isLoading}
           >
-            Record Delivery
+            Jim's here now!
           </button>
           <DeliverySetter
             date={this.props.date}
             onDeliverySet={(date: Date) => this.props.recordDelivery(date)}
           />
+          <button
+            className="button"
+            disabled={!this.props.time || this.props.isLoading}
+            onClick={() => this.props.clearDelivery(this.props.date)}
+          >
+            Clear
+          </button>
         </div>
       </div>
     );
@@ -120,6 +141,7 @@ const mapDispatchToProps: DispatchProps = {
   nextDate,
   recordDelivery,
   goToToday,
+  clearDelivery,
 };
 
 export default connect<Props, DispatchProps>(

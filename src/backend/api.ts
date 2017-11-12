@@ -80,6 +80,28 @@ export class RequiredError extends Error {
 /**
  * 
  * @export
+ * @interface ApiClearDeliveryRequest
+ */
+export interface ApiClearDeliveryRequest {
+    /**
+     * The date this delivery is for in YYYYMMDD.
+     * @type {string}
+     * @memberof ApiClearDeliveryRequest
+     */
+    date?: string;
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiClearDeliveryResponse
+ */
+export interface ApiClearDeliveryResponse {
+}
+
+/**
+ * 
+ * @export
  * @interface ApiDelivery
  */
 export interface ApiDelivery {
@@ -168,6 +190,36 @@ export const ApiServiceApiFetchParamCreator = function (configuration?: Configur
     return {
         /**
          * 
+         * @param {ApiClearDeliveryRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clearDelivery(body: ApiClearDeliveryRequest, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling clearDelivery.');
+            }
+            const path = `/v1/clear`;
+            const urlObj = url.parse(path, true);
+            const requestOptions = Object.assign({ method: 'POST' }, options);
+            const headerParameter = {} as any;
+            const queryParameter = {} as any;
+
+            headerParameter['Content-Type'] = 'application/json';
+
+            urlObj.query = Object.assign({}, urlObj.query, queryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete urlObj.search;
+            requestOptions.headers = Object.assign({}, headerParameter, options.headers);
+            requestOptions.body = JSON.stringify(body || {});
+
+            return {
+                url: url.format(urlObj),
+                options: requestOptions,
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -229,6 +281,24 @@ export const ApiServiceApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {ApiClearDeliveryRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clearDelivery(body: ApiClearDeliveryRequest, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiClearDeliveryResponse> {
+            const fetchArgs = ApiServiceApiFetchParamCreator(configuration).clearDelivery(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + fetchArgs.url, fetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -273,6 +343,15 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
     return {
         /**
          * 
+         * @param {ApiClearDeliveryRequest} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        clearDelivery(body: ApiClearDeliveryRequest, options?: any) {
+            return ApiServiceApiFp(configuration).clearDelivery(body, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -298,6 +377,17 @@ export const ApiServiceApiFactory = function (configuration?: Configuration, fet
  * @extends {BaseAPI}
  */
 export class ApiServiceApi extends BaseAPI {
+    /**
+     * 
+     * @param {} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiServiceApi
+     */
+    public clearDelivery(body: ApiClearDeliveryRequest, options?: any) {
+        return ApiServiceApiFp(this.configuration).clearDelivery(body, options)(this.fetch, this.basePath);
+    }
+
     /**
      * 
      * @param {*} [options] Override http request option.

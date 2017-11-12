@@ -4,6 +4,8 @@ import {
   INITIAL_LOAD_START,
   RECORD_DELIVERY,
   RecordDeliveryAction,
+  CLEAR_DELIVERY,
+  ClearDeliveryAction,
 } from "./actions";
 import { ApiFetchAllResponse, ApiServiceApi, ApiDelivery } from "./backend/api";
 import { call, put, takeEvery } from "redux-saga/effects";
@@ -27,11 +29,16 @@ const apiDeliveryToDelivery = (apiDelivery: ApiDelivery): Delivery => {
 };
 
 function* performInitialLoad(api: ApiServiceApi) {
-  const data: ApiFetchAllResponse = yield call([api, api.fetchAll]);
-  // We do a risky cast here because the types just "happen" to line up, except that the client's
-  // fields aren't nullable. We don't expect the server to ever send null fields though.
-  // TODO(james): Check for nullables.
-  yield put(initialLoadSuccess(data.delivery!.map(apiDeliveryToDelivery)));
+  try {
+    const data: ApiFetchAllResponse = yield call([api, api.fetchAll]);
+    yield put(
+      initialLoadSuccess(
+        data.delivery ? data.delivery.map(apiDeliveryToDelivery) : []
+      )
+    );
+  } catch (e) {
+    document.body.innerHTML = "failed to load, please refresh";
+  }
 }
 
 export function* watchRecordDelivery(api: ApiServiceApi) {
@@ -53,4 +60,15 @@ function* performRecordDelivery(
       },
     },
   });
+}
+
+export function* watchClearDelivery(api: ApiServiceApi) {
+  yield takeEvery(CLEAR_DELIVERY, performClearDelivery, api);
+}
+
+export function* performClearDelivery(
+  api: ApiServiceApi,
+  action: ClearDeliveryAction
+) {
+  yield call([api, api.clearDelivery], { date: formatDate(action.date) });
 }

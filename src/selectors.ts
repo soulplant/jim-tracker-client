@@ -19,7 +19,7 @@ export const getTime = (state: JTState): LocalTime | null => {
 };
 
 export const getIsToday = (state: JTState): boolean => {
-  return formatDate(getDate(state)) == formatDate(getToday(state));
+  return formatDate(getDate(state)) === formatDate(getToday(state));
 };
 
 export const getToday = (state: JTState): Date => {
