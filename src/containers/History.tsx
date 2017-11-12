@@ -1,20 +1,29 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { JTState } from "../types";
-import { Delivery } from "../actions";
+import { Delivery, jumpToDay } from "../actions";
 import { getDeliveryHistory, getToday, HistoryWeek } from "../selectors";
-import { formatTime } from "../utils";
+import { formatTime, formatDate } from "../utils";
 import * as moment from "moment";
 
 class DeliveryView extends React.Component<
-  { today: Date; delivery: Delivery | null },
+  {
+    today: Date;
+    delivery: Delivery | null;
+    onClick: () => void;
+  },
   {}
 > {
   render() {
-    if (!this.props.delivery) {
-      return <td>-</td>;
-    }
-    return <td>{formatTime(this.props.today, this.props.delivery.time)}</td>;
+    const content = this.props.delivery
+      ? formatTime(this.props.today, this.props.delivery.time)
+      : "-";
+
+    return (
+      <td style={{ cursor: "pointer" }} onClick={this.props.onClick}>
+        {content}
+      </td>
+    );
   }
 }
 
@@ -23,7 +32,11 @@ type Props = {
   deliveryHistory: HistoryWeek[];
 };
 
-class History extends React.Component<Props, {}> {
+type DispatchProps = {
+  jumpToDay: typeof jumpToDay;
+};
+
+class History extends React.Component<Props & DispatchProps, {}> {
   render() {
     return (
       <div
@@ -35,22 +48,31 @@ class History extends React.Component<Props, {}> {
         }}
       >
         <table>
-          <tr>
-            {this.props.deliveryHistory.map((ds, i) => (
-              <th>
-                {moment(ds.date)
-                  .add(1, "day")
-                  .format("ll")}
-              </th>
-            ))}
-          </tr>
+          <thead>
+            <tr>
+              {this.props.deliveryHistory.map((ds, i) => (
+                <th key={formatDate(ds.date)}>
+                  {moment(ds.date)
+                    .add(1, "day")
+                    .format("ll")}
+                </th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {[1, 2, 3, 4, 5].map(dayOfWeek => (
-              <tr>
+              <tr key={dayOfWeek}>
                 {this.props.deliveryHistory.map((ds, i) => (
                   <DeliveryView
+                    key={formatDate(ds.date)}
                     today={this.props.today}
                     delivery={ds.deliveries[dayOfWeek]}
+                    onClick={() =>
+                      this.props.jumpToDay(
+                        moment(ds.date)
+                          .add(dayOfWeek, "days")
+                          .toDate()
+                      )}
                   />
                 ))}
               </tr>
@@ -67,4 +89,4 @@ const mapStateToProps = (state: JTState) => ({
   today: getToday(state),
 });
 
-export default connect(mapStateToProps)(History);
+export default connect(mapStateToProps, { jumpToDay })(History);

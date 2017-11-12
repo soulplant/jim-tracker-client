@@ -10,6 +10,7 @@ import {
   GO_TO_TODAY,
   INITIAL_LOAD_START,
   CLEAR_DELIVERY,
+  JUMP_TO_DAY,
 } from "./actions";
 
 import { combineReducers } from "redux";
@@ -111,6 +112,8 @@ const dateReducer = (state: Date = new Date(), action: JTAction): Date => {
       return changeDate(state, 1);
     case GO_TO_TODAY:
       return action.today;
+    case JUMP_TO_DAY:
+      return action.date;
     default:
       return state;
   }

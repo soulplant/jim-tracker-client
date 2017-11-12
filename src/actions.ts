@@ -10,6 +10,7 @@ export type JTAction =
   | PreviousDateAction
   | NextDateAction
   | GoToTodayAction
+  | JumpToDayAction
   | RecordDeliveryAction
   | ClearDeliveryAction;
 
@@ -32,6 +33,7 @@ export const DECREMENT_REQUESTS_IN_FLIGHT = "DECREMENT_REQUESTS_IN_FLIGHT";
 export const PREVIOUS_DATE = "PREVIOUS_DATE";
 export const NEXT_DATE = "NEXT_DATE";
 export const GO_TO_TODAY = "GO_TO_TODAY";
+export const JUMP_TO_DAY = "JUMP_TO_DAY";
 export const RECORD_DELIVERY = "RECORD_DELIVERY";
 export const CLEAR_DELIVERY = "CLEAR_DELIVERY";
 
@@ -67,6 +69,11 @@ export interface NextDateAction extends Action {
 export interface GoToTodayAction extends Action {
   type: typeof GO_TO_TODAY;
   today: Date;
+}
+
+export interface JumpToDayAction extends Action {
+  type: typeof JUMP_TO_DAY;
+  date: Date;
 }
 
 export interface RecordDeliveryAction extends Action {
@@ -113,6 +120,11 @@ export const nextDate = (): NextDateAction => ({
 export const goToToday = (): GoToTodayAction => ({
   type: GO_TO_TODAY,
   today: new Date(),
+});
+
+export const jumpToDay = (date: Date): JumpToDayAction => ({
+  type: JUMP_TO_DAY,
+  date,
 });
 
 export const recordDelivery = (
