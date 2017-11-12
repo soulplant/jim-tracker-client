@@ -20,8 +20,16 @@ import { formatTime } from "../utils";
 import { StyleSheet, css } from "aphrodite";
 import * as moment from "moment";
 import DeliverySetter from "../components/DeliverySetter";
+import History from "../containers/History";
 
 const styles = StyleSheet.create({
+  cc: {
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
   container: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -53,7 +61,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
       return null;
     }
     return (
-      <div className="content">
+      <div className={"content " + css(styles.cc)}>
         <h3
           style={{
             textAlign: "center",
@@ -123,6 +131,7 @@ class App extends React.Component<Props & DispatchProps, {}> {
             Clear
           </button>
         </div>
+        <History />
       </div>
     );
   }
@@ -139,8 +148,8 @@ const mapStateToProps = (state: JTState): Props => ({
 const mapDispatchToProps: DispatchProps = {
   previousDate,
   nextDate,
-  recordDelivery,
   goToToday,
+  recordDelivery,
   clearDelivery,
 };
 
