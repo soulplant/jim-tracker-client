@@ -26,25 +26,24 @@ local volumeMount(name, path) = container.volumeMounts(container.volumeMountsTyp
 // Adds a secret volume to a deployment.
 local secretVolume(name, secretName) = volumes(volume.name(name) + volume.mixin.secret.secretName(secretName));
 
-local repoName = 'asia.gcr.io/helix-sydney/talk-tracker';
-local host = 'talks.dev.helixta.com.au';
 
 local talkTracker = {
-  name:: 'talk-tracker',
+  name:: 'jim-tracker',
   imageVersion:: 'v1',
   projectId:: 'helix-sydney',
-  host:: host,
   labels:: {app: $.name},
   useTls:: true,
   namespace:: $.name,
+  repoName:: 'asia.gcr.io/helix-sydney/jim-tracker',
+  host:: 'jim.dev.helixta.com.au',
 
   // Resource requests / limits. Memory is request+limit, but CPU is just request.
   memory:: '50Mi',
   cpu:: '50m',
 
   local appServer =
-    container.new('talk-tracker', repoName + ':' + $.imageVersion) +
-    container.command("/talk-tracker") +
+    container.new('jim-tracker', $.repoName + ':' + $.imageVersion) +
+    container.command("/jim-tracker") +
     container.args(['-projectId', $.projectId]) +
     container.args(['-namespace', $.namespace]) +
     container.ports(container.portsType.newNamed("http", 1234)) +
@@ -57,11 +56,12 @@ local talkTracker = {
     }) +
     volumeMount('google-cloud-key', '/var/secrets/google') +
     container.env(container.envType.new('GOOGLE_APPLICATION_CREDENTIALS', '/var/secrets/google/key.json')) +
-    container.env(container.envType.new('BASIC_AUTH_USER', 'talks')) +
-    container.env(container.envType.fromSecretRef('BASIC_AUTH_PASS', 'talk-tracker-password', 'password')) +
+    container.env(container.envType.new('BASIC_AUTH_USER', 'jim')) +
+    container.env(container.envType.fromSecretRef('BASIC_AUTH_PASS', 'jim-tracker-password', 'password')) +
     container.imagePullPolicy('Always'),
 
 
+  // TODO(james): Get jim tracker its own key.
   local ttDeployment = deployment.new($.name, 1, [appServer], $.labels) +
     secretVolume('google-cloud-key', 'talk-tracker-key'),
 
